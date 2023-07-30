@@ -15,8 +15,8 @@ const tryCounter = ref(0)
 
 <template>
   <Header></Header>
-  <Board    :word="word" :words="words" />
-  <Keyboard :word="word" :words="words" />
+  <Board    :word="word" :words="words" :tryCounter="tryCounter" />
+  <Keyboard :word="word" :words="words" :tryCounter="tryCounter" />
 </template>
 
 <style scoped>

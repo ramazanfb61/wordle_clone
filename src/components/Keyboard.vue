@@ -27,6 +27,7 @@ function enterWord(){
   if(props.word.length === 5){
     props.words.push(props.word)
     props.word = [];
+    props.tryCounter++
     console.log("burası",props.words);
     console.log("burası word",props.word);
 

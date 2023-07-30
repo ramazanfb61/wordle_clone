@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  *{
+    @apply bg-primary text-text
+  }
+}
+
+@layer components {
+  .boardItem{
+    @apply border border-primary justify-center w-14 h-14 flex items-center
+  }
+}

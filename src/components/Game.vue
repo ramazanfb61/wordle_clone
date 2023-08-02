@@ -9,10 +9,6 @@ const tryCounter = ref(0)
 
 const order = ref(0)
 
-onMounted(() => {
-  console.log(word.value, words.value[0]);
-})
-
 function deleteLetter() {
   if (order.value > 0) {
     order.value--
@@ -29,19 +25,34 @@ function addLetter(letter) {
   }
 }
 
+onMounted(()=>{
+  const word = ["El","L","M","A","S"]
+  const result = word.filter((item)=> item === "El")
+
+
+  console.log(result);
+})
+
 function enterWord() {
   order.value = 0;
   //tryCounter.value++
-  checkWord()
   words.value.splice(tryCounter.value++, 1, word.value)
+  checkWord()
   console.log("tryCounter", tryCounter.value);
   console.log("burası word", word.value);
   word.value = Array(5).fill(null);
   console.log("burası words", words.value);
 }
-
 function checkWord() {
-  console.log("hello buras",words.value[tryCounter]);
+  const theWord = ["El","L","M","A","S"];
+  
+  let result = ["El","L","M","A","S"].filter((item)=>{
+    item === "L"
+  })
+
+
+  console.log(result);
+  console.log("hello buras",words.value[tryCounter.value - 1]);
 }
 </script>
 

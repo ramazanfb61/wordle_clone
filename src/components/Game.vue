@@ -6,8 +6,9 @@ const keyboard = ["e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü", "a", "s",
 const word = ref(Array(5).fill(null))
 const words = ref(Array(6).fill(Array(5).fill('')))
 const tryCounter = ref(0)
-
+const wordStatus = ref()
 const order = ref(0)
+const answer = ref(["E", "L", "M", "A", "S"])
 
 function deleteLetter() {
   if (order.value > 0) {
@@ -25,12 +26,9 @@ function addLetter(letter) {
   }
 }
 
-onMounted(()=>{
-  const word = ["El","L","M","A","S"]
-  const result = word.filter((item)=> item === "El")
+onMounted(() => {
+  
 
-
-  console.log(result);
 })
 
 function enterWord() {
@@ -44,15 +42,11 @@ function enterWord() {
   console.log("burası words", words.value);
 }
 function checkWord() {
-  const theWord = ["El","L","M","A","S"];
   
-  let result = ["El","L","M","A","S"].filter((item)=>{
-    item === "L"
-  })
-
-
-  console.log(result);
-  console.log("hello buras",words.value[tryCounter.value - 1]);
+  wordStatus.value = words.value[0].filter((element,index) => answer.value.find((el=> el === element)));
+  console.log("wordStatus",wordStatus.value);
+  // {'bg-green-600': wordStatus[index] === a ,}
+  console.log("hello buras", words.value[tryCounter.value - 1]);
 }
 </script>
 
@@ -61,7 +55,13 @@ function checkWord() {
     <div class="grid grid-rows-6 gap-y-2 font-semibold text-3xl">
       <div class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === 0" v-for="a in word" class="boardItem">{{ a }}</div>
-        <div v-else-if="words[0]" v-for="a in words[0]" class="boardItem">{{ a }}</div>
+        <div 
+          v-else-if="words[0]" 
+          v-for="(a,index) in words[0]"
+          class="boardItem transition ease-linear duration-300"
+          :class="wordStatus[index] === a ? {'bg-green-600': wordStatus[index] === a}:{'bg-yellow-700': wordStatus.includes(a) }">
+            {{ a }}
+        </div>
       </div>
       <div class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === 1" v-for="a in word" class="boardItem">{{ a }}</div>
@@ -100,7 +100,9 @@ function checkWord() {
 
   </div>
   <div class="flex justify-center  text-xl">
-    <button @click="deleteLetter" class="col-span-4 border p-1 px-6 mt-2 mx-3 rounded bg-red-900 border-primary   ">Sil</button>
-    <button @click="enterWord"    class="col-span-4 border p-1 px-6 mt-2 mx-3 rounded bg-green-900 border-primary ">Gir</button>
+    <button @click="deleteLetter"
+      class="col-span-4 border p-1 px-6 mt-2 mx-3 rounded bg-red-900 border-primary   ">Sil</button>
+    <button @click="enterWord"
+      class="col-span-4 border p-1 px-6 mt-2 mx-3 rounded bg-green-900 border-primary ">Gir</button>
   </div>
 </template>

@@ -59,7 +59,7 @@ function checkWord() {
           v-else-if="words[0]" 
           v-for="(a,index) in words[0]"
           class="boardItem transition ease-linear duration-300"
-          :class="wordStatus[index] === a ? {'bg-green-600': wordStatus[index] === a}:{'bg-yellow-700': wordStatus.includes(a) }">
+          :class=" a === answer[index] ? {'bg-green-600': a === answer[index]}:{'bg-yellow-700': wordStatus.includes(a) }">
             {{ a }}
         </div>
       </div>

@@ -42,10 +42,20 @@ function enterWord() {
     console.log("burası words", words.value);
   }
 }
+
+
+
+function checkWordStatus(index,val){
+  const result = wordStatus.value.forEach((el,indexNum)=>{
+    return el.includes(val)
+  })
+  console.log("hacı",result);
+}
+
 function checkWord() {
-  wordStatus.value = []
   console.log(tryCounter.value);
-  wordStatus.value = words.value[tryCounter.value -1].filter((element, index) => answer.value.find((el => el === element)));
+  wordStatus.value.push(words.value[tryCounter.value -1].filter((element, index) => answer.value.find((el => el === element)))) 
+  checkWordStatus()
   console.log("wordStatus", wordStatus.value);
   console.log("hello buras", words.value[tryCounter.value - 1]);
 }
@@ -57,7 +67,7 @@ function checkWord() {
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem">{{ a }}</div>
         <div v-else-if="item" v-for="(a, index) in item" class="boardItem  ease-linear duration-300"
-          :class="a === answer[index] ? { 'bg-green-600': a === answer[index] } : { 'bg-yellow-700': wordStatus.includes(a) }">
+          :class="a === answer[index] ? { 'bg-green-600': a === answer[index] } : { 'bg-yellow-700': checkWordStatus(index,a) }">
           {{ a }}
         </div>
       </div>

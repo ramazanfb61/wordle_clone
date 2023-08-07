@@ -38,19 +38,20 @@ function enterWord() {
   if (order.value === 5) {
     order.value = 0;  
     words.value.splice(tryCounter.value++, 1, word.value)
-    checkWord()
+    checkDuplicate()
     console.log("tryCounter", tryCounter.value);
     console.log("word", word.value);
     word.value = Array(5).fill(<wordItem>{txt : '', includes : false,home:false});
     console.log("words", words.value);
   }
 }
-function checkWord() {
-  words.value[tryCounter.value - 1].every((element,index)=>{
-    element[index].txt === answer.value[index]
-  })
+
+
+
+function checkDuplicate(){
   
 }
+
 </script>
 
 <template>
@@ -59,7 +60,7 @@ function checkWord() {
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem">{{ a.txt }}</div>
         <div v-else-if="item" v-for="(a, index) in item" class="boardItem  ease-linear duration-300"
-          :class="a.txt === answer[index] ? { 'bg-green-600': a.txt === answer[index] } : { 'bg-yellow-700': wordStatus.includes(a.txt) }">
+          :class=" a.txt === answer[index] ? { 'bg-green-600': a.txt === answer[index]} : { 'bg-yellow-700' : answer.includes(a.txt) }">
           {{ a.txt }}
         </div>
       </div>

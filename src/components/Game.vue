@@ -1,36 +1,39 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, watch } from "vue"
 
 const keyboard = ["e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü", "a", "s", "d", "f", "g", "h", "j", "k", "l", "ş", "i", "z", "c", "ç", "v", "b", "n", "m", "ö"]
 
-const word = ref(Array(5).fill({txt : '', exist : false}))
-const words = ref(Array(6).fill(Array(5).fill({txt : '', exist : false})))
+const word = ref(Array(5).fill(<wordItem>{}))
+const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})))
 const tryCounter = ref(0)
-const wordStatus = ref([])
+const wordStatus = ref<any>([])
 const order = ref(0)
-const answer = ref(["E", "L", "M", "A", "S"])
+const answer = ref<any>(["E", "L", "M", "A", "S"])
 
-function deleteLetter() {
+type wordItem = {
+  txt : '',
+  includes : false,
+  home:false,
+}
+
+
+
+function deleteLetter(): void {
   if (order.value > 0) {
     order.value--
   }
   word.value.splice(order.value, 1, "")
   console.log(word.value);
 }
+
 function addLetter(letter) {
   if (order.value < 5) {
-    word.value.splice(order.value++, 1, {txt : letter,exist:false})
+    word.value.splice(order.value++, 1, <wordItem>{txt:letter,includes:false,home:false})
     console.log("order value", order.value);
     console.log(letter);
     console.log(word.value);
   }
 }
-
-onMounted(() => {
-
-
-})
-
 function enterWord() {
   if (order.value === 5) {
     order.value = 0;  
@@ -38,15 +41,15 @@ function enterWord() {
     checkWord()
     console.log("tryCounter", tryCounter.value);
     console.log("word", word.value);
-    word.value = Array(5).fill({txt : '', exist : false});
+    word.value = Array(5).fill(<wordItem>{txt : '', includes : false,home:false});
     console.log("words", words.value);
   }
 }
 function checkWord() {
-  console.log(tryCounter.value);
-  wordStatus.value.push(words.value[tryCounter.value -1].filter((element, index) => answer.value.find((el => el === element.txt))))
-  console.log("wordStatus", wordStatus.value);
-  console.log(`words ${tryCounter.value -1} elemanı`, words.value[tryCounter.value - 1]);
+  words.value[tryCounter.value - 1].every((element,index)=>{
+    element[index].txt === answer.value[index]
+  })
+  
 }
 </script>
 

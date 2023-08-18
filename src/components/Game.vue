@@ -27,13 +27,13 @@ function addLetter(letter) {
 }
 
 onMounted(() => {
-
+  console.log("a lil bit slow are we?");
 
 })
 
 function enterWord() {
   if (order.value === 5) {
-    order.value = 0;  
+    order.value = 0;
     words.value.splice(tryCounter.value++, 1, word.value)
     checkWord()
     console.log("tryCounter", tryCounter.value);
@@ -45,20 +45,33 @@ function enterWord() {
 
 
 
-function checkWordStatus(index,val){
-  const result = wordStatus.value.forEach((el,indexNum)=>{
+function checkWordStatus(index, val) {
+  const result = wordStatus.value.forEach((el, indexNum) => {
     return el.includes(val)
   })
-  console.log("hacı",result);
+  console.log("hacı", result);
 }
 
 function checkWord() {
-  console.log(tryCounter.value);
-  wordStatus.value.push(words.value[tryCounter.value -1].filter((element, index) => answer.value.find((el => el === element)))) 
-  checkWordStatus()
+  wordStatus.value.push(words.value[tryCounter.value - 1].filter((element, index) =>
+    answer.value.find((el => el === element))
+  )
+  )
   console.log("wordStatus", wordStatus.value);
-  console.log("hello buras", words.value[tryCounter.value - 1]);
+  //checkWordDeleteItem()
+
 }
+
+
+function checkWordDeleteItem() {
+  console.log("here ");
+  words.value[tryCounter.value - 1].forEach((el, i) => {
+    answer.value.find(el)
+  })
+}
+
+
+
 </script>
 
 <template>
@@ -67,7 +80,7 @@ function checkWord() {
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem">{{ a }}</div>
         <div v-else-if="item" v-for="(a, index) in item" class="boardItem  ease-linear duration-300"
-          :class="a === answer[index] ? { 'bg-green-600': a === answer[index] } : { 'bg-yellow-700': checkWordStatus(index,a) }">
+          :class="a === answer[index] ? { 'bg-green-600': a === answer[index] } : { 'bg-yellow-700': answer.includes(a) }">
           {{ a }}
         </div>
       </div>
@@ -75,9 +88,9 @@ function checkWord() {
   </main>
 
   <div class="flex  justify-center mt-8 mb-4">
-    <div class="grid grid-cols-10 gap-x-1 gap-y-2 lg:gap-x-3 lg:gap-y-3">
-      <button @click="addLetter(letter.toUpperCase())" value="letter" v-for="letter in keyboard"
-        class="border border-primary flex justify-center items-center py-2 px-3 rounded delEnter">
+    <div class="grid grid-cols-10 px-5 gap-x-2 gap-y-3 lg:gap-x-3 lg:gap-y-3">
+      <button @click="addLetter(letter.toUpperCase())" :value="letter" v-for="letter in keyboard"
+        class="border border-primary flex justify-center items-center py-2 px-4 rounded delEnter">
         {{ letter.toUpperCase() }}
       </button>
     </div>

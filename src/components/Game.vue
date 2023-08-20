@@ -12,6 +12,7 @@ const order = ref(0)
 const answer = ref<any>(["K", "A", "Y", "A", "K"]) // ,"Y","A","K"
 const wordStatus = ref();
 const gameStatus = ref<boolean>(false);
+const foundLetter = ref([])
 
 onMounted(() => {
   gameStatus.value = false;
@@ -67,6 +68,8 @@ function checkWord() {
     if (element.txt === answer.value[index]) {
       element.home = true
       wordStatus.value[element.txt] > 0 ? wordStatus.value[element.txt]-- : -1
+      foundLetter.value.push(element.txt);
+      
       console.log(wordStatus.value);
 
 
@@ -104,8 +107,10 @@ function checkWord() {
 
   <div class="flex  justify-center mt-8 mb-4 mx-4">
     <div class="grid grid-cols-10 gap-x-1 gap-y-2 lg:gap-x-3 lg:gap-y-3">
-      <button @click="addLetter(letter.toUpperCase())" :value="letter" v-for="letter in keyboard"
-        class="border border-primary flex justify-center items-center py-2 px-3 rounded delEnter">
+      <button @click="addLetter(letter.toUpperCase())" :value="letter" v-for="(letter,index) in keyboard"
+        class="border border-primary flex justify-center items-center py-2 px-3 rounded delEnter"
+        :class="{'bg-green-700':foundLetter.includes(letter.toUpperCase())}"
+        >
         {{ letter.toUpperCase() }}
       </button>
     </div>

@@ -70,14 +70,11 @@ function checkWord() {
       console.log(wordStatus.value);
 
 
-    } else if (wordStatus.value[element.txt] > 0 && wordStatus.value[element.home] === false) {
+    } else if (wordStatus.value[element.txt] > 0 && element.home === false) {
       element.includes = true
-      console.log("şura", wordStatus.value[element.txt]);
 
     }
     if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
-      alert("Oyunu Kazandınız")
-      
       gameStatus.value = true
     }
     console.log(wordStatus.value);
@@ -94,9 +91,11 @@ function checkWord() {
   <main class="flex justify-center lg:mt-10 md:mt-8 mt-4 ">
     <div class="grid grid-rows-6 gap-y-2 font-semibold text-3xl">
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
-        <div v-if="tryCounter === index" v-for="a in word" class="boardItem">{{ a.txt }}</div>
-        <div v-else-if="item" v-for="(a, index) in item" class="boardItem  ease-linear duration-300"
-          :class="a.txt === answer[index] ? { 'bg-green-600': a.home } : { 'bg-yellow-700': a.includes }">
+        <div v-if="tryCounter === index" v-for="a in word" class="boardItem" :class="{ 'pulse': a.txt }">
+          {{ a.txt }}
+        </div>
+        <div v-else-if="item" v-for="(a, index) in item" class="boardItem"
+          :class=" {'bg-green-600 wordCheckAnimation': a.home,'bg-yellow-700 wordCheckAnimation': a.includes,'wordCheckAnimation' : a.txt } ">
           {{ a.txt }}
         </div>
       </div>
@@ -118,3 +117,45 @@ function checkWord() {
       class="col-span-4 border p-1 px-6 mt-2 mx-3 rounded bg-green-900 border-primary ">Gir</button>
   </div>
 </template>
+
+
+<style scoped>
+.pulse {
+  animation: pulse ease-in-out 200ms;
+}
+
+.wordCheckAnimation {
+  animation: wordCheckAnimation linear 500ms;
+}
+
+@keyframes wordCheckAnimation {
+  0% {
+    transform: rotate3d(0);
+  }
+
+  50% {
+    transform: rotate3d(10, 10, 10, 180deg);
+  }
+
+  100% {
+    transform: rotate3d(15, 15, 15, 360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.20);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>

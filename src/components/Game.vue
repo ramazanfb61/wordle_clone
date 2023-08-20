@@ -9,16 +9,15 @@ const word = ref(Array(5).fill(<wordItem>{}))
 const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})))
 const tryCounter = ref(0)
 const order = ref(0)
-const answer = ref<any>(["K","A","Y","A","K"]) // ,"Y","A","K"
-const wordStatus = ref(["A","Y" ,"Y","A","K"])  // ,"Y","A","K"
+const answer = ref<any>(["K", "A", "Y", "A", "K"]) // ,"Y","A","K"
+const wordStatus = ref();
+const gameStatus = ref<boolean>(false);
 
-onMounted(()=>{
-  let arr = <any>[];
-  answer.value.filter((el,index)=>{
-    arr.push(el)
-  })
-  console.log(arr,"arr");
-  
+onMounted(() => {
+  gameStatus.value = false;
+  wordStatus.value = answer.value.reduce((map, val) => { map[val] = (map[val] || 0) + 1; return map }, {}
+  );
+  console.log(wordStatus.value);
 })
 
 
@@ -35,7 +34,7 @@ type wordItem = {
 }
 
 function deleteLetter(): void {
-  if (order.value > 0) {
+  if (order.value > 0 && !gameStatus.value) {
     order.value--
   }
   word.value.splice(order.value, 1, { txt: '', includes: false, home: false })
@@ -43,13 +42,13 @@ function deleteLetter(): void {
 }
 
 function addLetter(letter) {
-  if (order.value < 5) {
+  if (order.value < 5 && !gameStatus.value) {
     word.value.splice(order.value++, 1, <wordItem>{ txt: letter, includes: false, home: false })
   }
 }
 
 function enterWord() {
-  if (order.value === 5) {
+  if (order.value === 5 && !gameStatus.value) {
     order.value = 0;
     words.value.splice(tryCounter.value++, 1, word.value)
     checkWord()
@@ -59,13 +58,35 @@ function enterWord() {
   }
 }
 
-function checkWord(){
-  words.value[tryCounter.value - 1].forEach((element,index) => {
-    if(element.txt === answer.value[index]){
+function checkWord() {
+
+
+
+  words.value[tryCounter.value - 1].forEach((element, index) => {
+
+    if (element.txt === answer.value[index]) {
       element.home = true
+      wordStatus.value[element.txt] > 0 ? wordStatus.value[element.txt]-- : -1
+      console.log(wordStatus.value);
+
+
+    } else if (wordStatus.value[element.txt] > 0 && wordStatus.value[element.home] === false) {
+      element.includes = true
+      console.log("şura", wordStatus.value[element.txt]);
+
     }
+    if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
+      alert("Oyunu Kazandınız")
+      
+      gameStatus.value = true
+    }
+    console.log(wordStatus.value);
+
   });
 }
+
+
+
 
 </script>
 
@@ -75,7 +96,7 @@ function checkWord(){
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem">{{ a.txt }}</div>
         <div v-else-if="item" v-for="(a, index) in item" class="boardItem  ease-linear duration-300"
-          :class="a.txt === answer[index] ? { 'bg-green-600': a.home } : { 'bg-yellow-700': answer.includes(a.txt) }">
+          :class="a.txt === answer[index] ? { 'bg-green-600': a.home } : { 'bg-yellow-700': a.includes }">
           {{ a.txt }}
         </div>
       </div>

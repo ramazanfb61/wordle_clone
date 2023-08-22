@@ -2,25 +2,33 @@
 import { ref, onMounted, watch } from "vue"
 
 const keyboard = [
-  "e", "r", "t", "y", "u", "ı", "o", "p", "ğ", "ü", "a", "s", "d", "f", "g", "h", "j", "k", "l", "ş", "i", "z", "c", "ç", "v", "b", "n", "m", "ö"
+  "E", "R", "T", "Y", "U", "I", "O", "P", "Ğ", "Ü", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Ş", "İ", "Z", "C", "Ç", "V", "B", "N", "M", "Ö"
 ]
 
 const word = ref(Array(5).fill(<wordItem>{}))
 const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})))
 const tryCounter = ref(0)
 const order = ref(0)
-const answer = ref<any>(["K", "A", "Y", "A", "K"]) // ,"Y","A","K"
+const answer = ref<any>([]) // ,"Y","A","K"
 const wordStatus = ref();
 const gameStatus = ref<boolean>(false);
 const foundLetter = ref([])
 const includeLetter = ref([])
 
 onMounted(() => {
+  setGameSettings()
   startGame()
 })
-watch
+
+function setGameSettings(){
+  let randomAnswer = Array.from(allAnswers[Math.floor(Math.random()*allAnswers.length)].toUpperCase())
+  answer.value = randomAnswer
+  console.log("cevap : ",answer.value);
+  
+}
 
 function startGame(){
+  
   gameStatus.value = false;
   wordStatus.value = answer.value.reduce((map, val) => { map[val] = (map[val] || 0) + 1; return map }, {}
   );
@@ -73,7 +81,8 @@ function checkWord() {
 
 
   words.value[tryCounter.value - 1].forEach((element, index) => {
-
+    console.log("nainb",element.txt,answer.value[index]);
+    
     if (element.txt === answer.value[index]) {
       element.home = true
       wordStatus.value[element.txt] > 0 ? wordStatus.value[element.txt]-- : -1
@@ -89,12 +98,7 @@ function checkWord() {
     if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
       gameStatus.value = true
     }
-    if(wordStatus.value[element.txt] === 0  && gameStatus.value === false){
-      startGame()
-    }
-    
     console.log(wordStatus.value);
-
   });
 }
 
@@ -120,11 +124,11 @@ function checkWord() {
 
   <div class="flex  justify-center mt-8 mb-4 mx-4">
     <div class="grid grid-cols-10 gap-x-1 gap-y-2 lg:gap-x-3 lg:gap-y-3">
-      <button @click="addLetter(letter.toUpperCase())" :value="letter" v-for="(letter,index) in keyboard"
+      <button @click="addLetter(letter)" :value="letter" v-for="(letter,index) in keyboard"
         class="border border-primary flex justify-center items-center py-2 px-3 rounded delEnter"
-        :class="foundLetter.includes(letter.toUpperCase()) ? {'bg-green-600' : foundLetter.includes(letter.toUpperCase())} : {'bg-yellow-700' : includeLetter.includes(letter.toUpperCase())}"
+        :class="foundLetter.includes(letter) ? {'bg-green-600' : foundLetter.includes(letter)} : {'bg-yellow-700' : includeLetter.includes(letter)}"
         >
-        {{ letter.toUpperCase() }}
+        {{ letter }}
       </button>
     </div>
   </div>

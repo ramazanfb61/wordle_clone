@@ -16,15 +16,35 @@ const foundLetter = ref([])
 const includeLetter = ref([])
 
 onMounted(() => {
-  setGameSettings()
-  startGame()
+  binarySearch("güneş",0,1000)
+
+//  setGameSettings()
+//  startGame()
 })
 
 function setGameSettings(){
   let randomAnswer = Array.from(allAnswers[Math.floor(Math.random()*allAnswers.length)].toUpperCase())
   answer.value = randomAnswer
   console.log("cevap : ",answer.value);
-  
+}
+
+function binarySearch(target,start,end){
+
+  if(start > end){
+      console.log("Not Found");
+  }
+  const middle = Math.floor((start + end)/2);
+
+  if(allAnswers[middle] === target){
+    console.log("target found at",middle);
+    
+  }
+  if(allAnswers[middle] > target) {
+    return binarySearch(target,start,middle - 1);
+  }
+  if(allAnswers[middle] < target) {
+    return binarySearch(target,middle - 1,start);
+  }
 }
 
 function startGame(){

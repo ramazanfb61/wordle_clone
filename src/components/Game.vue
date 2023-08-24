@@ -16,35 +16,14 @@ const foundLetter = ref([])
 const includeLetter = ref([])
 
 onMounted(() => {
-  binarySearch("güneş",0,1000)
-
-//  setGameSettings()
-//  startGame()
+  setGameSettings()
+  startGame()
 })
 
 function setGameSettings(){
-  let randomAnswer = Array.from(allAnswers[Math.floor(Math.random()*allAnswers.length)].toUpperCase())
+  let randomAnswer = Array.from(allAnswers[Math.floor(Math.random()*allAnswers.length)].toLocaleUpperCase("TR"))
   answer.value = randomAnswer
   console.log("cevap : ",answer.value);
-}
-
-function binarySearch(target,start,end){
-
-  if(start > end){
-      console.log("Not Found");
-  }
-  const middle = Math.floor((start + end)/2);
-
-  if(allAnswers[middle] === target){
-    console.log("target found at",middle);
-    
-  }
-  if(allAnswers[middle] > target) {
-    return binarySearch(target,start,middle - 1);
-  }
-  if(allAnswers[middle] < target) {
-    return binarySearch(target,middle - 1,start);
-  }
 }
 
 function startGame(){
@@ -105,9 +84,7 @@ function checkWord() {
     if (element.txt === answer.value[index]) {
       element.home = true
       wordStatus.value[element.txt] > 0 ? wordStatus.value[element.txt]-- : -1
-      foundLetter.value.push(element.txt);
-      
-      console.log(wordStatus.value);
+      foundLetter.value.push(element.txt)
 
 
     } else if (wordStatus.value[element.txt] > 0 && element.home === false) {
@@ -117,8 +94,15 @@ function checkWord() {
     if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
       gameStatus.value = true
     }
+    if(wordStatus.value[element.txt] === 0 && foundLetter.value.includes(element.txt)){
+      includeLetter.value.filter((el)=>{
+        el !== element.txt
+      })
+    }
     console.log(wordStatus.value);
   });
+  console.log(foundLetter.value);
+  console.log(includeLetter.value);
 }
 
 
@@ -127,8 +111,8 @@ function checkWord() {
 </script>
 
 <template>
-  <main class="flex justify-center lg:mt-10 md:mt-8 mt-4 ">
-    <div class="grid grid-rows-6 gap-y-2 font-semibold text-3xl">
+  <main class="flex justify-center lg:mt-10 md:mt-8 mt-4  ">
+    <div class="grid grid-rows-6 gap-y-2 font-semibold lg:text-3xl text-2xl   ">
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem" :class="{ 'pulse': a.txt }">
           {{ a.txt }}

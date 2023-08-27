@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue"
+import { ref, onMounted, watch,inject } from "vue"
 
 const keyboard = [
   "E", "R", "T", "Y", "U", "I", "O", "P", "Ğ", "Ü", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Ş", "İ", "Z", "C", "Ç", "V", "B", "N", "M", "Ö"
 ]
+const injec = inject(["notyf"])
 
 const word = ref(Array(5).fill(<wordItem>{}))
 const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})))
@@ -14,6 +15,7 @@ const wordStatus = ref();
 const gameStatus = ref<boolean>(false);
 const foundLetter = ref([])
 const includeLetter = ref([])
+const toastIsWord = ref(false)
 
 onMounted(() => {
   setGameSettings()
@@ -76,7 +78,15 @@ function checkWord() {
   if(tryCounter.value === 6){
     gameStatus.value = false
   }
+  const isAnswer = words.value[tryCounter.value - 1]
+    .reduce((result,current)=>result + current.txt,"")
+    .toLocaleLowerCase("tr");
 
+  allAnswers.includes(isAnswer) ? toastIsWord.value = true : toastIsWord.value = false;
+
+  console.log(allAnswers.includes(isAnswer),isAnswer,"burası");
+  
+  
 
   words.value[tryCounter.value - 1].forEach((element, index) => {
     console.log("nainb",element.txt,answer.value[index]);
@@ -111,7 +121,7 @@ function checkWord() {
 </script>
 
 <template>
-  <main class="flex justify-center lg:mt-10 md:mt-8 mt-4  ">
+  <main class="flex justify-center md:mt-6 mt-4  ">
     <div class="grid grid-rows-6 gap-y-2 font-semibold lg:text-3xl text-2xl   ">
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem" :class="{ 'pulse': a.txt }">

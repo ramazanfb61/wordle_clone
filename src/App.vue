@@ -1,7 +1,7 @@
 <script setup>
-import Header from "./components/Header.vue"
-import Game from "./components/Game.vue";
-import Modal from   "./components/Modal.vue"
+import Header from   "./components/Header.vue"
+import Game   from   "./components/Game.vue"
+
 
 
 
@@ -9,7 +9,7 @@ import Modal from   "./components/Modal.vue"
 
 <template>
   <Header></Header>
-  <Modal></Modal>
+  
   <Game />
 </template>
 

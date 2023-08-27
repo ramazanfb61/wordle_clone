@@ -11,6 +11,6 @@
 
 @layer components {
   .boardItem{
-    @apply border border-primary justify-center lg:w-14 lg:h-14 flex items-center w-10 h-10 transition-all duration-300 ease-in-out
+    @apply border border-primary justify-center xl:w-12 xl:h-12 flex items-center w-10 h-10 transition-all duration-300 ease-in-out
   }
 }

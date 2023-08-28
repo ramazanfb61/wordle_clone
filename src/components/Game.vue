@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, watch,inject } from "vue"
+import { ref, onMounted, watch } from "vue"
 
 const keyboard = [
   "E", "R", "T", "Y", "U", "I", "O", "P", "Ğ", "Ü", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Ş", "İ", "Z", "C", "Ç", "V", "B", "N", "M", "Ö"
 ]
-const injec = inject(["notyf"])
 
 const word = ref(Array(5).fill(<wordItem>{}))
 const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})))
@@ -15,21 +14,21 @@ const wordStatus = ref();
 const gameStatus = ref<boolean>(false);
 const foundLetter = ref([])
 const includeLetter = ref([])
-const toastIsWord = ref(false)
+const toastWord = ref(false)
 
 onMounted(() => {
   setGameSettings()
   startGame()
 })
 
-function setGameSettings(){
-  let randomAnswer = Array.from(allAnswers[Math.floor(Math.random()*allAnswers.length)].toLocaleUpperCase("TR"))
+function setGameSettings() {
+  let randomAnswer = Array.from(allAnswers[Math.floor(Math.random() * allAnswers.length)].toLocaleUpperCase("TR"))
   answer.value = randomAnswer
-  console.log("cevap : ",answer.value);
+  console.log("cevap : ", answer.value);
 }
 
-function startGame(){
-  
+function startGame() {
+
   gameStatus.value = false;
   wordStatus.value = answer.value.reduce((map, val) => { map[val] = (map[val] || 0) + 1; return map }, {}
   );
@@ -46,7 +45,6 @@ type wordItem = {
   home: false,
 }
 
-
 function deleteLetter(): void {
   if (order.value > 0 && !gameStatus.value) {
     order.value--
@@ -61,12 +59,26 @@ function addLetter(letter) {
   }
 }
 
+function toastWordCheck() {
+  
+}
+
 function enterWord() {
-  if (order.value === 5 && !gameStatus.value) {
+  toastWordCheck()
+
+  var isAnswer = words.value[tryCounter.value - 1].reduce((result, current) => result + current.txt, "").toLocaleLowerCase("tr")
+
+  allAnswers.includes(isAnswer) ? toastWord.value = false : toastWord.value = true;
+  console.log(allAnswers.includes(isAnswer), isAnswer, "burası", toastWord.value);
+
+
+  if (order.value === 5 && !gameStatus.value && toastWord.value === false) {
     order.value = 0;
     words.value.splice(tryCounter.value++, 1, word.value)
-    console.log("trycounter",tryCounter.value);
-    
+    console.log("trycounter", tryCounter.value);
+
+
+
     checkWord()
     console.log("word", word.value);
     word.value = Array(5).fill(<wordItem>{ txt: '', includes: false, home: false });
@@ -75,22 +87,13 @@ function enterWord() {
 }
 
 function checkWord() {
-  if(tryCounter.value === 6){
+  if (tryCounter.value === 6) {
     gameStatus.value = false
   }
-  const isAnswer = words.value[tryCounter.value - 1]
-    .reduce((result,current)=>result + current.txt,"")
-    .toLocaleLowerCase("tr");
-
-  allAnswers.includes(isAnswer) ? toastIsWord.value = true : toastIsWord.value = false;
-
-  console.log(allAnswers.includes(isAnswer),isAnswer,"burası");
-  
-  
 
   words.value[tryCounter.value - 1].forEach((element, index) => {
-    console.log("nainb",element.txt,answer.value[index]);
-    
+    console.log("nainb", element.txt, answer.value[index]);
+
     if (element.txt === answer.value[index]) {
       element.home = true
       wordStatus.value[element.txt] > 0 ? wordStatus.value[element.txt]-- : -1
@@ -104,8 +107,8 @@ function checkWord() {
     if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
       gameStatus.value = true
     }
-    if(wordStatus.value[element.txt] === 0 && foundLetter.value.includes(element.txt)){
-      includeLetter.value.filter((el)=>{
+    if (wordStatus.value[element.txt] === 0 && foundLetter.value.includes(element.txt)) {
+      includeLetter.value.filter((el) => {
         el !== element.txt
       })
     }
@@ -121,14 +124,18 @@ function checkWord() {
 </script>
 
 <template>
-  <main class="flex justify-center md:mt-6 mt-4  ">
+  <main class="flex justify-center md:mt-6 mt-4  text-white">
+    <div class="absolute z-10 border border-primary px-4 py-2 mt-2 rounded bg-white text-black font-medium"
+      v-if="toastWord">
+      Bu kelime mevcut değil
+    </div>
     <div class="grid grid-rows-6 gap-y-2 font-semibold lg:text-3xl text-2xl   ">
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
         <div v-if="tryCounter === index" v-for="a in word" class="boardItem" :class="{ 'pulse': a.txt }">
           {{ a.txt }}
         </div>
         <div v-else-if="item" v-for="(a, index) in item" class="boardItem"
-          :class=" {'bg-green-600 wordCheckAnimation': a.home,'bg-yellow-700 wordCheckAnimation': a.includes,'wordCheckAnimation' : a.txt } ">
+          :class="{ 'bg-green-600 wordCheckAnimation': a.home, 'bg-yellow-700 wordCheckAnimation': a.includes, 'wordCheckAnimation': a.txt }">
           {{ a.txt }}
         </div>
       </div>
@@ -137,10 +144,9 @@ function checkWord() {
 
   <div class="flex  justify-center mt-8 mb-4 mx-4">
     <div class="grid grid-cols-10 gap-x-1 gap-y-2 lg:gap-x-3 lg:gap-y-3">
-      <button @click="addLetter(letter)" :value="letter" v-for="(letter,index) in keyboard"
+      <button @click="addLetter(letter)" :value="letter" v-for="(letter, index) in keyboard"
         class="border border-primary flex justify-center items-center py-2 px-3 rounded delEnter"
-        :class="foundLetter.includes(letter) ? {'bg-green-600' : foundLetter.includes(letter)} : {'bg-yellow-700' : includeLetter.includes(letter)}"
-        >
+        :class="foundLetter.includes(letter) ? { 'bg-green-600': foundLetter.includes(letter) } : { 'bg-yellow-700': includeLetter.includes(letter) }">
         {{ letter }}
       </button>
     </div>

@@ -60,24 +60,29 @@ function addLetter(letter) {
 }
 
 function toastWordCheck() {
-  
+  let isAnswer = word.value.reduce((res, current) => res + current.txt, "").toLocaleLowerCase("tr")
+  let isAnswerResult = allAnswers.includes(isAnswer)
+
+  if(isAnswerResult) {
+    toastWord.value = false
+  }else {
+    toastWord.value = true;
+    setTimeout(() => {
+      toastWord.value = false
+    }, 1500);
+  }
+  console.log(allAnswers.includes(isAnswer), isAnswer, "burası", toastWord.value);
+
+  return isAnswerResult;
 }
 
 function enterWord() {
-  toastWordCheck()
+  let isAnswerRes = toastWordCheck()
 
-  var isAnswer = words.value[tryCounter.value - 1].reduce((result, current) => result + current.txt, "").toLocaleLowerCase("tr")
-
-  allAnswers.includes(isAnswer) ? toastWord.value = false : toastWord.value = true;
-  console.log(allAnswers.includes(isAnswer), isAnswer, "burası", toastWord.value);
-
-
-  if (order.value === 5 && !gameStatus.value && toastWord.value === false) {
+  if (order.value === 5 && !gameStatus.value && isAnswerRes) {
     order.value = 0;
     words.value.splice(tryCounter.value++, 1, word.value)
     console.log("trycounter", tryCounter.value);
-
-
 
     checkWord()
     console.log("word", word.value);

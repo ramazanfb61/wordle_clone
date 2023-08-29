@@ -19,7 +19,7 @@
 
     </div>
   </header>
-  <dialog id="modal" class="backdrop:opacity-70 backdrop:bg-primary rounded shadow-md shadow-black p-3">
+  <dialog id="modal" class="backdrop:opacity-70 backdrop:bg-primary rounded shadow-md shadow-black p-3 -translate-y-28">
     <div class="p-3">
       <p>Hello world</p>
     </div>

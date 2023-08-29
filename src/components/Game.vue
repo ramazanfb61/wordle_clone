@@ -45,6 +45,8 @@ type wordItem = {
   home: false,
 }
 
+
+
 function deleteLetter(): void {
   if (order.value > 0 && !gameStatus.value) {
     order.value--
@@ -56,6 +58,11 @@ function deleteLetter(): void {
 function addLetter(letter) {
   if (order.value < 5 && !gameStatus.value) {
     word.value.splice(order.value++, 1, <wordItem>{ txt: letter, includes: false, home: false })
+  }
+}
+function addLetterKeyboard(key) {
+  if (order.value < 5 && !gameStatus.value) {
+    word.value.splice(order.value++, 1, <wordItem>{ txt: key, includes: false, home: false })
   }
 }
 
@@ -123,6 +130,18 @@ function checkWord() {
   console.log(includeLetter.value);
 }
 
+addEventListener("keypress",(event)=>{
+  if(event.code === 'Backspace' || event.code === "Delete"){
+    deleteLetter()
+    console.log("dfdfdfdfgfdgg");
+    
+  }
+
+  console.log(event.key);
+  
+  //addLetterKeyboard(event.key.toLocaleUpperCase("TR"))
+})
+
 
 
 
@@ -132,7 +151,7 @@ function checkWord() {
   <main class="flex justify-center md:mt-6 mt-4  text-white">
     <div class="absolute z-10 border border-primary px-4 py-2 mt-2 rounded bg-white text-black font-medium"
       v-if="toastWord">
-      Bu kelime mevcut değil
+      Bu kelime mevcut değil !
     </div>
     <div class="grid grid-rows-6 gap-y-2 font-semibold lg:text-3xl text-2xl   ">
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">

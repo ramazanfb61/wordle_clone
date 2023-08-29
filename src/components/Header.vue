@@ -19,9 +19,28 @@
 
     </div>
   </header>
-  <dialog id="modal" class="backdrop:opacity-70 backdrop:bg-primary rounded shadow-md shadow-black p-3 -translate-y-28">
-    <div class="p-3">
-      <p>Hello world</p>
+  <dialog id="modal"
+    class="w-36 px-3 py-2 backdrop:opacity-70  backdrop:bg-primary rounded shadow-md shadow-black -translate-y-28">
+    <div class="border">
+      <div class="border border-red-500 mb-5">
+        <h4>İstatistik</h4>
+      </div>
+      <div class="border border-blue-500">
+        <div>
+          <div class="flex">
+            <div>0</div>
+            <div class="bg-red-500">
+              <div>2</div>
+            </div>
+          </div>
+          <div class="flex">
+            <div>1</div>
+            <div class="bg-red-500">
+              <div>2</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <form method="dialog" class="text-right">
       <button class="p-1 rounded bg-red-800">Close</button>

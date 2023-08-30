@@ -24,7 +24,7 @@ onMounted(() => {
 function setGameSettings() {
   let randomAnswer = Array.from(allAnswers[Math.floor(Math.random() * allAnswers.length)].toLocaleUpperCase("TR"))
   answer.value = randomAnswer
-  console.log("cevap : ", answer.value);
+  console.error("cevap : ", answer.value);
 }
 
 function startGame() {
@@ -70,9 +70,9 @@ function toastWordCheck() {
   let isAnswer = word.value.reduce((res, current) => res + current.txt, "").toLocaleLowerCase("tr")
   let isAnswerResult = allAnswers.includes(isAnswer)
 
-  if(isAnswerResult) {
+  if (isAnswerResult) {
     toastWord.value = false
-  }else {
+  } else {
     toastWord.value = true;
     setTimeout(() => {
       toastWord.value = false
@@ -84,17 +84,22 @@ function toastWordCheck() {
 }
 
 function enterWord() {
-  let isAnswerRes = toastWordCheck()
 
-  if (order.value === 5 && !gameStatus.value && isAnswerRes) {
-    order.value = 0;
-    words.value.splice(tryCounter.value++, 1, word.value)
-    console.log("trycounter", tryCounter.value);
+  if (order.value === 5 && !gameStatus.value) {
 
-    checkWord()
-    console.log("word", word.value);
-    word.value = Array(5).fill(<wordItem>{ txt: '', includes: false, home: false });
-    console.log("words", words.value);
+    let isAnswerRes = toastWordCheck()
+
+    if (isAnswerRes) {
+      order.value = 0;
+      words.value.splice(tryCounter.value++, 1, word.value)
+      console.log("trycounter", tryCounter.value);
+      
+      checkWord()
+      console.log("word", word.value);
+      word.value = Array(5).fill(<wordItem>{ txt: '', includes: false, home: false });
+      console.log("words", words.value);
+    }
+
   }
 }
 
@@ -130,16 +135,20 @@ function checkWord() {
   console.log(includeLetter.value);
 }
 
-addEventListener("keypress",(event)=>{
-  if(event.code === 'Backspace' || event.code === "Delete"){
+addEventListener("keydown", (event) => {
+  if (event.key === 'Backspace' || event.key === "Delete") {
     deleteLetter()
-    console.log("dfdfdfdfgfdgg");
-    
+  }
+  else if (event.key === "Enter") {
+    enterWord()
+  }
+  else if(keyboard.includes(event.key.toLocaleUpperCase("TR"))){
+    console.log(event.key,typeof event.key,event.key.length);
+
+    addLetterKeyboard(event.key.toLocaleUpperCase("TR"))
   }
 
-  console.log(event.key);
-  
-  //addLetterKeyboard(event.key.toLocaleUpperCase("TR"))
+
 })
 
 

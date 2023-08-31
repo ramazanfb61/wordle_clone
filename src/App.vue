@@ -6,7 +6,13 @@ function setLocalStorage(){
   if (localStorage.getItem("gameResult")) {
     return 1
   } else {
+
+    
+
     const setItem = {
+
+      totalGamesPlayed : 0,
+      totalWin : 0,
       gameResult: [
         {
           winCounter: 2,
@@ -27,6 +33,7 @@ function setLocalStorage(){
           winCounter: 0,
         },
       ],
+      
     };
     localStorage.setItem("gameResult", JSON.stringify(setItem));
   }

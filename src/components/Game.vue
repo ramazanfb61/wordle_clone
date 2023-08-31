@@ -47,7 +47,20 @@ const toastWord = ref(false);
 onMounted(() => {
   setGameSettings();
   startGame();
+  saveToStorage()
 });
+
+function saveToStorage(){
+  const saveData = JSON.parse(localStorage.getItem("gameResult"));
+
+
+
+  var totalWin = saveData.gameResult.reduce((result,current,)=>{
+    result + current
+  },0)
+  console.log("buraası",totalWin);
+  
+}
 
 watch(gameStatus,async(newVal,oldVal)=>{
   if(newVal === true){
@@ -135,6 +148,8 @@ function toastWordCheck() {
 
   return isAnswerResult;
 }
+
+
 
 function enterWord() {
   if (order.value === 5 && !gameStatus.value) {

@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 
+import {store,endGame} from "../store.js"
+
+const word = ref(Array(5).fill(<wordItem>{}));
+const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})));
+const tryCounter = ref(0);
+const order = ref(0);
+const answer = ref<any>([]); // ,"Y","A","K"
+const wordStatus = ref();
+const gameStatus = ref(false);
+const winOrLose = ref<any>(null)
+const foundLetter = ref([]);
+const includeLetter = ref([]);
+const toastWord = ref(false);
+
 const keyboard = [
   "E",
   "R",
@@ -33,40 +47,31 @@ const keyboard = [
   "Ö",
 ];
 
-const word = ref(Array(5).fill(<wordItem>{}));
-const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})));
-const tryCounter = ref(0);
-const order = ref(0);
-const answer = ref<any>([]); // ,"Y","A","K"
-const wordStatus = ref();
-const gameStatus = ref(false);
-const foundLetter = ref([]);
-const includeLetter = ref([]);
-const toastWord = ref(false);
-
 onMounted(() => {
   setGameSettings();
   startGame();
-  saveToStorage()
+  console.log(endGame.endGameModal,"end game");
+  
 });
+
+function saveToStorageWin(){
+  const saveData = JSON.parse(localStorage.getItem("gameResult"));
+  saveData.gameResult[tryCounter.value - 1].winCounter++
+  saveData.totalGamesPlayed++
+  
+  localStorage.setItem("gameResult",JSON.stringify(saveData))
+  store.updateStorage()
+}
 
 function saveToStorage(){
   const saveData = JSON.parse(localStorage.getItem("gameResult"));
 
-
-
-  var totalWin = saveData.gameResult.reduce((result,current,)=>{
-    result + current
-  },0)
-  console.log("buraası",totalWin);
-  
+  saveData.totalGamesPlayed++
+  localStorage.setItem("gameResult",JSON.stringify(saveData))
+  store.updateStorage()
 }
 
-watch(gameStatus,async(newVal,oldVal)=>{
-  if(newVal === true){
-    localStorage.setItem("gameResult",)
-  }
-})
+
 
 
 function setGameSettings() {
@@ -76,11 +81,13 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
+  
   console.log("cevap : ", answer.value);
 }
 
 function startGame() {
   gameStatus.value = false;
+  winOrLose.value = null; // false lose and true won
   wordStatus.value = answer.value.reduce((map, val) => {
     map[val] = (map[val] || 0) + 1;
     return map;
@@ -101,9 +108,8 @@ type wordItem = {
 function deleteLetter(): void {
   if (order.value > 0 && !gameStatus.value) {
     order.value--;
+    word.value.splice(order.value, 1, { txt: "", includes: false, home: false });
   }
-  word.value.splice(order.value, 1, { txt: "", includes: false, home: false });
-  console.log(word.value);
 }
 
 function addLetter(letter) {
@@ -139,12 +145,7 @@ function toastWordCheck() {
       toastWord.value = false;
     }, 1500);
   }
-  console.log(
-    allAnswers.includes(isAnswer),
-    isAnswer,
-    "burası",
-    toastWord.value
-  );
+  
 
   return isAnswerResult;
 }
@@ -172,9 +173,25 @@ function enterWord() {
   }
 }
 
+watch(winOrLose,async(newVal,oldVal)=>{
+  endGame.updateEndGameModal()
+  console.log(endGame.endGameModal,"end game");
+  
+  if(newVal === true){
+    saveToStorageWin()
+    
+  }else if(newVal === false){
+    saveToStorage()
+  }
+
+})
+
 function checkWord() {
   if (tryCounter.value === 6) {
-    gameStatus.value = false;
+    winOrLose.value = false;
+    gameStatus.value = true;
+    console.log("burası");
+    
   }
 
   words.value[tryCounter.value - 1].forEach((element, index) => {
@@ -190,6 +207,7 @@ function checkWord() {
     }
     if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
       gameStatus.value = true;
+      winOrLose.value = true
     }
     if (
       wordStatus.value[element.txt] === 0 &&
@@ -211,9 +229,6 @@ addEventListener("keydown", (event) => {
   } else if (event.key === "Enter") {
     enterWord();
   } else if (keyboard.includes(event.key.toLocaleUpperCase("TR"))) {
-    console.log(event.key, typeof event.key, event.key.length);
-    console.log(localStorage.getItem("gameResult"));
-
     addLetterKeyboard(event.key.toLocaleUpperCase("TR"));
   }
 });

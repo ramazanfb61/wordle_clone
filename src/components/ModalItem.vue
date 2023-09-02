@@ -1,8 +1,20 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import {store} from "../store.js"
 
+const storageStatus = ref(store);
 const gameResults = ref(JSON.parse(localStorage.getItem("gameResult")))
 console.log(gameResults.value.gameResult);
+
+if(storageStatus === true){
+  console.warn("oh my god");
+  gameResults.value = ref(JSON.parse(localStorage.getItem("gameResult")))
+}
+
+watch(store,async(newVal,oldVal)=>{
+  console.log(newVal.storageStatus);
+  gameResults.value = JSON.parse(localStorage.getItem("gameResult"))
+})
 
 </script>
 

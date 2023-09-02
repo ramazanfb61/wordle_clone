@@ -6,19 +6,16 @@ function setLocalStorage(){
   if (localStorage.getItem("gameResult")) {
     return 1
   } else {
-
-    
-
     const setItem = {
 
       totalGamesPlayed : 0,
       totalWin : 0,
       gameResult: [
         {
-          winCounter: 2,
+          winCounter: 0,
         },
         {
-          winCounter: 1,
+          winCounter: 0,
         },
         {
           winCounter: 0,
@@ -47,7 +44,6 @@ setLocalStorage()
 
 <template>
   <Header></Header>
-  
   <Game />
 </template>
 

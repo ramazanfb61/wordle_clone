@@ -6,7 +6,6 @@ export const store = reactive({
   
   updateStorage(){
     this.storageStatus = true 
-    ("state",this.storageStatus);
   }
 })
 

@@ -169,7 +169,6 @@ function enterWord() {
 
 watch(winOrLose,async(newVal,oldVal)=>{
   endGame.updateEndGameModal()
-  (endGame.endGameModal,"end game");
   
   if(newVal === true){
     saveToStorageWin()

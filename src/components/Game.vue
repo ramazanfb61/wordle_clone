@@ -48,8 +48,8 @@ const keyboard = [
 ];
 
 onMounted(() => {
-  setGameSettings();
-  startGame();  
+  setGameSettings()
+  startGame()
 });
 
 function saveToStorageWin(){
@@ -70,8 +70,6 @@ function saveToStorage(){
 }
 
 
-
-
 function setGameSettings() {
   let randomAnswer = Array.from(
     allAnswers[Math.floor(Math.random() * allAnswers.length)].toLocaleUpperCase(
@@ -79,7 +77,7 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
-  gameAnswer.editAnswer(randomAnswer)
+  gameAnswer.editAnswer(answer.value)
 }
 
 function startGame() {

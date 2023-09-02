@@ -5,7 +5,7 @@ import { endGame,gameAnswer } from "../store";
 import { onMounted, ref } from "vue";
 
 const modal = ref(null);
-const answer = ref(gameAnswer.answer.join(""))
+const answer = ref(gameAnswer.answer)
 
 function reloadPage(){
   location.reload()
@@ -20,11 +20,11 @@ function modalOpen() {
 }
 const interval = setInterval(() => {
   if (endGame.endGameModal === true) {
-    console.log(answer.value)
     modalOpen();
     clearInterval(interval);
   }
-}, 10);
+  answer.value = gameAnswer.answer.join("")
+}, 1000);
 </script>
 
 <template>
@@ -57,7 +57,7 @@ const interval = setInterval(() => {
       <div class="mb-5">
         <h4>İstatistikler</h4>
       </div>
-      <div>Cevap : {{ answer }}</div>
+      <div v-if="endGame.endGameModal === true">Cevap : {{ answer }}</div>
       <div class="">
         <modal-item></modal-item>
       </div>

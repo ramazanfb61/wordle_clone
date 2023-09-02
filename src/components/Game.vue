@@ -48,57 +48,8 @@ const keyboard = [
 ];
 
 onMounted(() => {
-<<<<<<< HEAD
-  console.log("a lil bit slow are we?");
-
-})
-
-function enterWord() {
-  if (order.value === 5) {
-    order.value = 0;
-    words.value.splice(tryCounter.value++, 1, word.value)
-    checkWord()
-    console.log("tryCounter", tryCounter.value);
-    console.log("burası word", word.value);
-    word.value = Array(5).fill(null);
-    console.log("burası words", words.value);
-  }
-}
-
-
-
-function checkWordStatus(index, val) {
-  const result = wordStatus.value.forEach((el, indexNum) => {
-    return el.includes(val)
-  })
-  console.log("hacı", result);
-}
-
-function checkWord() {
-  wordStatus.value.push(words.value[tryCounter.value - 1].filter((element, index) =>
-    answer.value.find((el => el === element))
-  )
-  )
-  console.log("wordStatus", wordStatus.value);
-  //checkWordDeleteItem()
-
-}
-
-
-function checkWordDeleteItem() {
-  console.log("here ");
-  words.value[tryCounter.value - 1].forEach((el, i) => {
-    answer.value.find(el)
-  })
-}
-
-
-
-=======
   setGameSettings();
-  startGame();
-  console.log(endGame.endGameModal,"end game");
-  
+  startGame();  
 });
 
 function saveToStorageWin(){
@@ -129,7 +80,7 @@ function setGameSettings() {
   );
   answer.value = randomAnswer;
   
-  console.log("cevap : ", answer.value);
+  console.log("cevap : ", answer.value.join(""));
 }
 
 function startGame() {
@@ -139,7 +90,6 @@ function startGame() {
     map[val] = (map[val] || 0) + 1;
     return map;
   }, {});
-  console.log(wordStatus.value);
 }
 
 const allAnswers = [
@@ -206,23 +156,20 @@ function enterWord() {
     if (isAnswerRes) {
       order.value = 0;
       words.value.splice(tryCounter.value++, 1, word.value);
-      console.log("trycounter", tryCounter.value);
 
       checkWord();
-      console.log("word", word.value);
       word.value = Array(5).fill(<wordItem>{
         txt: "",
         includes: false,
         home: false,
       });
-      console.log("words", words.value);
     }
   }
 }
 
 watch(winOrLose,async(newVal,oldVal)=>{
   endGame.updateEndGameModal()
-  console.log(endGame.endGameModal,"end game");
+  (endGame.endGameModal,"end game");
   
   if(newVal === true){
     saveToStorageWin()
@@ -237,12 +184,10 @@ function checkWord() {
   if (tryCounter.value === 6) {
     winOrLose.value = false;
     gameStatus.value = true;
-    console.log("burası");
     
   }
 
   words.value[tryCounter.value - 1].forEach((element, index) => {
-    console.log("nainb", element.txt, answer.value[index]);
 
     if (element.txt === answer.value[index]) {
       element.home = true;
@@ -264,10 +209,10 @@ function checkWord() {
         el !== element.txt;
       });
     }
-    console.log(wordStatus.value);
+    (wordStatus.value);
   });
-  console.log(foundLetter.value);
-  console.log(includeLetter.value);
+  (foundLetter.value);
+  (includeLetter.value);
 }
 
 addEventListener("keydown", (event) => {
@@ -279,7 +224,6 @@ addEventListener("keydown", (event) => {
     addLetterKeyboard(event.key.toLocaleUpperCase("TR"));
   }
 });
->>>>>>> remake
 </script>
 
 <template>
@@ -292,12 +236,6 @@ addEventListener("keydown", (event) => {
     </div>
     <div class="grid grid-rows-6 gap-y-2 font-semibold lg:text-3xl text-2xl">
       <div v-for="(item, index) in words" class="grid grid-cols-5 gap-x-2">
-<<<<<<< HEAD
-        <div v-if="tryCounter === index" v-for="a in word" class="boardItem">{{ a }}</div>
-        <div v-else-if="item" v-for="(a, index) in item" class="boardItem  ease-linear duration-300"
-          :class="a === answer[index] ? { 'bg-green-600': a === answer[index] } : { 'bg-yellow-700': answer.includes(a) }">
-          {{ a }}
-=======
         <div
           v-if="tryCounter === index"
           v-for="a in word"
@@ -317,19 +255,11 @@ addEventListener("keydown", (event) => {
           }"
         >
           {{ a.txt }}
->>>>>>> remake
         </div>
       </div>
     </div>
   </main>
 
-<<<<<<< HEAD
-  <div class="flex  justify-center mt-8 mb-4">
-    <div class="grid grid-cols-10 px-5 gap-x-2 gap-y-3 lg:gap-x-3 lg:gap-y-3">
-      <button @click="addLetter(letter.toUpperCase())" :value="letter" v-for="letter in keyboard"
-        class="border border-primary flex justify-center items-center py-2 px-4 rounded delEnter">
-        {{ letter.toUpperCase() }}
-=======
   <div class="flex justify-center mt-8 mb-4 mx-4">
     <div class="grid grid-cols-10 gap-x-1 gap-y-2 lg:gap-x-3 lg:gap-y-3">
       <button
@@ -344,7 +274,6 @@ addEventListener("keydown", (event) => {
         "
       >
         {{ letter }}
->>>>>>> remake
       </button>
     </div>
   </div>

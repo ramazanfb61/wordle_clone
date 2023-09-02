@@ -4,7 +4,6 @@ import {store} from "../store.js"
 
 const storageStatus = ref(store);
 const gameResults = ref(JSON.parse(localStorage.getItem("gameResult")))
-console.log(gameResults.value.gameResult);
 
 if(storageStatus === true){
   console.warn("oh my god");
@@ -12,7 +11,6 @@ if(storageStatus === true){
 }
 
 watch(store,async(newVal,oldVal)=>{
-  console.log(newVal.storageStatus);
   gameResults.value = JSON.parse(localStorage.getItem("gameResult"))
 })
 

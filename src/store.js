@@ -17,4 +17,9 @@ export const endGame = reactive({
   }
 })
 
-
+export const gameAnswer = reactive({
+  answer : "",
+  editAnswer(payload){
+    this.answer = payload
+  }
+})

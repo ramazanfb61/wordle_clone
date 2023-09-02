@@ -6,7 +6,6 @@ const storageStatus = ref(store);
 const gameResults = ref(JSON.parse(localStorage.getItem("gameResult")))
 
 if(storageStatus === true){
-  console.warn("oh my god");
   gameResults.value = ref(JSON.parse(localStorage.getItem("gameResult")))
 }
 

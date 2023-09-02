@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 
-import {store,endGame} from "../store.js"
+import {store,endGame,gameAnswer} from "../store.js"
 
 const word = ref(Array(5).fill(<wordItem>{}));
 const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})));
@@ -79,8 +79,7 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
-  
-  console.log("cevap : ", answer.value.join(""));
+  gameAnswer.editAnswer(randomAnswer)
 }
 
 function startGame() {

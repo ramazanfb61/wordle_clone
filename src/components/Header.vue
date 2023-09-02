@@ -1,20 +1,26 @@
 <script setup lang="ts">
 import { mdiInformation, mdiCog, mdiChartBox, mdiAlphaW } from "@mdi/js";
 import ModalItem from "./ModalItem.vue";
-import { endGame } from "../store";
-import { watch, ref, onMounted } from "vue";
+import { endGame,gameAnswer } from "../store";
+import { onMounted, ref } from "vue";
 
 const modal = ref(null);
+const answer = ref(gameAnswer.answer.join(""))
 
 function reloadPage(){
   location.reload()
 }
+
+  
+
+
 
 function modalOpen() {
   modal.value.showModal();
 }
 const interval = setInterval(() => {
   if (endGame.endGameModal === true) {
+    console.log(answer.value)
     modalOpen();
     clearInterval(interval);
   }
@@ -51,7 +57,7 @@ const interval = setInterval(() => {
       <div class="mb-5">
         <h4>İstatistikler</h4>
       </div>
-
+      <div>Cevap : {{ answer }}</div>
       <div class="">
         <modal-item></modal-item>
       </div>

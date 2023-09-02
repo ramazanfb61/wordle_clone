@@ -4,5 +4,5 @@ import App from './App.vue'
 import Icon from "@jamescoyle/vue-icon"
 
 createApp(App)
-.component("v-icon",Icon)
-.mount('#app')
+  .component("v-icon", Icon)
+  .mount('#app')

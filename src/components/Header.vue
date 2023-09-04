@@ -18,8 +18,8 @@ function setLocalStorage(modal){
   } else {
     const setItem = {
 
-      totalGamesPlayed : 0,
-      totalWin : 0,
+     // totalGamesPlayed : 0,
+     // totalWin : 0,
       gameResult: [
         {
           winCounter: 0,
@@ -42,7 +42,7 @@ function setLocalStorage(modal){
       ],
       
     };
-    change.value = true
+    change.value = true;
     localStorage.setItem("gameResult", JSON.stringify(setItem));
   }
 }
@@ -74,6 +74,8 @@ const infoInterval = setInterval(() => {
     console.log(change.value);
     info.value.showModal()
     clearInterval(infoInterval);
+  }else{
+    clearInterval(infoInterval)
   }
   
 }, 100);

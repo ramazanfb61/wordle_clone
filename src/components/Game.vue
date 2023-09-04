@@ -14,6 +14,7 @@ const winOrLose = ref<any>(null)
 const foundLetter = ref([]);
 const includeLetter = ref([]);
 const toastWord = ref(false);
+const notIncludeLetter = ref([])
 
 const keyboard = [
   "E",
@@ -192,6 +193,8 @@ function checkWord() {
     } else if (wordStatus.value[element.txt] > 0 && element.home === false) {
       element.includes = true;
       includeLetter.value.push(element.txt);
+    }else if(!wordStatus.value[element.txt]){
+      notIncludeLetter.value.push(element.txt)
     }
     if (words.value[tryCounter.value - 1].every((el) => el.home === true)) {
       gameStatus.value = true;
@@ -205,10 +208,9 @@ function checkWord() {
         el !== element.txt;
       });
     }
-    (wordStatus.value);
+    
   });
-  (foundLetter.value);
-  (includeLetter.value);
+  
 }
 
 addEventListener("keydown", (event) => {
@@ -220,6 +222,17 @@ addEventListener("keydown", (event) => {
     addLetterKeyboard(event.key.toLocaleUpperCase("TR"));
   }
 });
+
+function styleLetter(letter){
+
+  if(foundLetter.value.includes(letter)){
+    return { 'bg-green-600': foundLetter.value.includes(letter) }
+  }else if(includeLetter.value.includes(letter)){
+    return { 'bg-yellow-700': includeLetter.value.includes(letter) }
+  }else if(notIncludeLetter.value.includes(letter)){
+    return 'bg-gray-500'
+  }
+}
 </script>
 
 <template>
@@ -264,9 +277,7 @@ addEventListener("keydown", (event) => {
         v-for="(letter, index) in keyboard"
         class="border border-primary flex justify-center items-center py-2 px-3 rounded delEnter"
         :class="
-          foundLetter.includes(letter)
-            ? { 'bg-green-600': foundLetter.includes(letter) }
-            : { 'bg-yellow-700': includeLetter.includes(letter) }
+          styleLetter(letter)
         "
       >
         {{ letter }}

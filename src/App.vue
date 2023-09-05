@@ -1,14 +1,15 @@
 <script setup>
 import Header from   "./components/Header.vue"
-import Game   from   "./components/Game.vue"
+
+
 
 
 </script>
 
 <template>
-  <Header></Header>
-  <Game />
-</template>
+  <Header v-if="$route.name ='/'"></Header>
+  <RouterView></RouterView>
+</template> 
 
 <style scoped>
 

@@ -3,6 +3,7 @@ import { mdiInformation, mdiCog, mdiChartBox, mdiAlphaW } from "@mdi/js";
 import ModalItem from "./ModalItem.vue";
 import { endGame, gameAnswer } from "../store";
 import { onMounted, ref, watch } from "vue";
+import { router } from "../router";
 
 const modal = ref(null);
 const info = ref(null);
@@ -10,7 +11,7 @@ const change = ref(false);
 const answer = ref(gameAnswer.answer);
 
 function setLocalStorage() {
-  if (localStorage.getItem("gameResult")) {
+  if (localStorage.getItem("gameResult") !== null) {
     return 1;
   } else {
     const setItem = {
@@ -39,6 +40,7 @@ function setLocalStorage() {
     };
     change.value = true;
     localStorage.setItem("gameResult", JSON.stringify(setItem));
+    router.push('/howto')
   }
 }
 setLocalStorage();
@@ -71,15 +73,15 @@ const interval = setInterval(() => {
       </div>
       <h2 class="font-semibold text-xl translate-x-6">Wordle</h2>
       <div class="flex">
-        <button @click="infoOpen" class="">
-          <router-link to="/howto">
+        <router-link to="/howto">
+          <button class="w-full h-full">
             <v-icon
               class="text-icon"
               type="mdi"
               :path="mdiInformation"
             ></v-icon>
-          </router-link>
-        </button>
+          </button>
+        </router-link>
 
         <button @click="modalOpen" class="mx-1">
           <v-icon class="text-icon" type="mdi" :path="mdiChartBox"></v-icon>

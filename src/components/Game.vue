@@ -49,9 +49,12 @@ const keyboard = [
 ];
 
 onMounted(() => {
+  console.log("mounted");
+  
   setGameSettings();
   startGame();
 });
+
 
 function saveToStorageWin() {
   const saveData = JSON.parse(localStorage.getItem("gameResult"));
@@ -77,8 +80,9 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
-  gameAnswer.editAnswer(answer.value);
+  gameAnswer.editAnswer(answer.value.join(""));
   console.log("cevap",answer.value);
+  console.log(gameAnswer.answer,"gameAnswer");
   
 }
 

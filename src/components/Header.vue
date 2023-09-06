@@ -10,6 +10,16 @@ const info = ref(null);
 const change = ref(false);
 const answer = ref(gameAnswer.answer);
 
+const answerInterval = setInterval(() => {
+  answer.value = gameAnswer.answer
+}, 100);
+
+
+onMounted(()=>{
+  console.log(gameAnswer.answer);
+  console.log(answer.value,"answer");
+})
+
 function setLocalStorage() {
   if (localStorage.getItem("gameResult") !== null) {
     return 1;

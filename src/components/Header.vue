@@ -16,8 +16,8 @@ const answerInterval = setInterval(() => {
 
 
 onMounted(()=>{
-  console.log(gameAnswer.answer);
-  console.log(answer.value,"answer");
+  
+  
 })
 
 function setLocalStorage() {

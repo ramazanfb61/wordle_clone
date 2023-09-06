@@ -48,9 +48,7 @@ const keyboard = [
   "Ö",
 ];
 
-onMounted(() => {
-  console.log("mounted");
-  
+onMounted(() => {  
   setGameSettings();
   startGame();
 });
@@ -81,8 +79,6 @@ function setGameSettings() {
   );
   answer.value = randomAnswer;
   gameAnswer.editAnswer(answer.value.join(""));
-  console.log("cevap",answer.value);
-  console.log(gameAnswer.answer,"gameAnswer");
   
 }
 
@@ -93,7 +89,6 @@ function startGame() {
     map[val] = (map[val] || 0) + 1;
     return map;
   }, {});
-  console.log(wordStatus.value);
   
 }
 
@@ -4764,8 +4759,7 @@ function enterWord() {
     if (isAnswerRes) {
       order.value = 0;
       words.value.splice(tryCounter.value++, 1, word.value);
-      console.log(words.value[tryCounter.value - 1], "burası");
-      console.log(wordStatus.value);
+     
 
       checkWord();
       word.value = Array(5).fill(<wordItem>{
@@ -4819,12 +4813,10 @@ function checkWord() {
       includeLetter.value.filter((el) => {
         el !== element.txt;
       });
-      console.log(includeLetter.value,"şurası");
       
     }
   });
 
-  console.log(includeLetter.value);
   
 }
 

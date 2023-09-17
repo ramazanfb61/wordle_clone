@@ -7,7 +7,7 @@ const exOne = ref(["E", "L", "M", "A", "S"]);
 
 <template>
   <div class="w-full h-full backdrop:bg-primary" >
-    <div class="">
+    <div class="md:w-2/3 mx-auto mt-3">
       <div class="flex justify-between p-1">
         <div></div>
         <h3 class="text-center text-xl mb-5">Nasıl Oynanır?</h3>

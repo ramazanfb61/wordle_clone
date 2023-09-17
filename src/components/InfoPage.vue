@@ -12,9 +12,11 @@ const exOne = ref(["E", "L", "M", "A", "S"]);
         <div></div>
         <h3 class="text-center text-xl mb-5">Nasıl Oynanır?</h3>
         <form>
+          <router-link to="/" class="bg-inherit">
           <button class="px-1 rounded-3xl bg-gray-700">
-            <router-link to="/" class="bg-inherit">X</router-link>
+            X
           </button>
+        </router-link>
         </form>
       </div>
       <div class="flex flex-col items-center">

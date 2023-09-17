@@ -78,6 +78,8 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
+  //console.log("cevap",answer.value.join(''));
+  
   gameAnswer.editAnswer(answer.value.join(""));
   
 }
@@ -4794,6 +4796,7 @@ function checkWord() {
     if (element.txt === answer.value[index]) {
       element.home = true;
       foundLetter.value.push(element.txt);
+      wordStatus.value[element.txt]--
     } else if (wordStatus.value[element.txt] > 0 && element.home === false) {
       element.includes = true;
       wordStatus.value[element.txt] > 0 ? wordStatus.value[element.txt]-- : -1;

@@ -78,7 +78,7 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
-  //console.log("cevap",answer.value.join(''));
+  console.log("cevap",answer.value.join(''));
   
   gameAnswer.editAnswer(answer.value.join(""));
   

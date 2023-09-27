@@ -1,16 +1,16 @@
-<script setup lang="ts">
+<script setup >
 import { ref, onMounted, watch } from "vue";
 
 import { store, endGame, gameAnswer } from "../store.js";
 
-const word = ref(Array(5).fill(<wordItem>{}));
-const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})));
+const word = ref(Array(5).fill({}));
+const words = ref(Array(6).fill(Array(5).fill({})));
 const tryCounter = ref(0);
 const order = ref(0);
-const answer = ref<any>([]); // ,"Y","A","K"
+const answer = ref([]); // ,"Y","A","K"
 const wordStatus = ref();
 const gameStatus = ref(false);
-const winOrLose = ref<any>(null);
+const winOrLose = ref(null);
 const foundLetter = ref([]);
 const includeLetter = ref([]);
 const toastWord = ref(false);
@@ -78,7 +78,7 @@ function setGameSettings() {
     )
   );
   answer.value = randomAnswer;
-  console.log("cevap",answer.value.join(''));
+  console.log("cevap",answer.value);
   
   gameAnswer.editAnswer(answer.value.join(""));
   
@@ -4696,14 +4696,9 @@ const allAnswers = [
   "bohem",
 ];
 
-type wordItem = {
-  txt: "";
-  includes: false;
-  home: false;
-  notInclude: false;
-};
 
-function deleteLetter(): void {
+
+function deleteLetter() {
   if (order.value > 0 && !gameStatus.value) {
     order.value--;
     word.value.splice(order.value, 1, {
@@ -4717,7 +4712,7 @@ function deleteLetter(): void {
 
 function addLetter(letter) {
   if (order.value < 5 && !gameStatus.value) {
-    word.value.splice(order.value++, 1, <wordItem>{
+    word.value.splice(order.value++, 1, {
       txt: letter,
       includes: false,
       home: false,
@@ -4727,7 +4722,7 @@ function addLetter(letter) {
 }
 function addLetterKeyboard(key) {
   if (order.value < 5 && !gameStatus.value) {
-    word.value.splice(order.value++, 1, <wordItem>{
+    word.value.splice(order.value++, 1, {
       txt: key,
       includes: false,
       home: false,
@@ -4764,12 +4759,14 @@ function enterWord() {
      
 
       checkWord();
-      word.value = Array(5).fill(<wordItem>{
-        txt: "",
+      word.value = Array(5).fill({
+        txt: '',
         includes: false,
         home: false,
         notInclude: false,
       });
+      console.log("word val",word.value);
+        
     }
   }
 }
@@ -4784,15 +4781,8 @@ watch(winOrLose, async (newVal, oldVal) => {
   }
 });
 
-function checkWord() {
-  if (tryCounter.value === 6) {
-    winOrLose.value = false;
-    gameStatus.value = true;
-  }
-  if(gameStatus.value === false){
-    startGame()
-  }
-  words.value[tryCounter.value - 1].forEach((element, index) => {
+/*
+words.value[tryCounter.value - 1].forEach((element, index) => {
     if (element.txt === answer.value[index]) {
       element.home = true;
       foundLetter.value.push(element.txt);
@@ -4819,7 +4809,25 @@ function checkWord() {
       
     }
   });
+  console.log("wordStatus",wordStatus.value);
+*/
+// checkWord content is here
 
+watch(word.value,async(newVal,oldVal)=>{
+  console.log(newVal);
+})
+
+function checkWord() {
+  if (tryCounter.value === 6) {
+    winOrLose.value = false;
+    gameStatus.value = true;
+  }
+  if(gameStatus.value === false){
+    startGame()
+  }
+  console.log("words",words.value);
+
+  
   
 }
 

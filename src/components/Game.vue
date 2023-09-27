@@ -3,18 +3,21 @@ import { ref, onMounted, watch } from "vue";
 
 import { store, endGame, gameAnswer } from "../store.js";
 
-const word = ref(Array(5).fill({}));
-const words = ref(Array(6).fill(Array(5).fill({})));
+const word = ref(Array(5).fill(''));
+const words = ref(Array(6).fill(" ".repeat(5)));
 const tryCounter = ref(0);
 const order = ref(0);
-const answer = ref([]); // ,"Y","A","K"
-const wordStatus = ref();
+const answer = ref(""); // ,"Y","A","K"
+// const wordStatus = ref();
+
+const evaluations = ref(Array(6).fill([]))
 const gameStatus = ref(false);
 const winOrLose = ref(null);
 const foundLetter = ref([]);
 const includeLetter = ref([]);
-const toastWord = ref(false);
 const notIncludeLetter = ref([]);
+const toastWord = ref(false);
+
 
 const keyboard = [
   "E",
@@ -49,6 +52,8 @@ const keyboard = [
 ];
 
 onMounted(() => {  
+  console.log("letter found : ",evaluations.value);
+  console.log("words",words.value);
   setGameSettings();
   startGame();
 });
@@ -72,25 +77,25 @@ function saveToStorage() {
 }
 
 function setGameSettings() {
-  let randomAnswer = Array.from(
+  let randomAnswer = 
     allAnswers[Math.floor(Math.random() * allAnswers.length)].toLocaleUpperCase(
       "TR"
     )
-  );
-  answer.value = randomAnswer;
-  console.log("cevap",answer.value);
   
-  gameAnswer.editAnswer(answer.value.join(""));
+  answer.value = randomAnswer;
+  console.log("cevap",answer.value);  
+  gameAnswer.editAnswer(answer.value);
   
 }
 
 function startGame() {
   gameStatus.value = false;
   winOrLose.value = null; // false lose and true won
-  wordStatus.value = answer.value.reduce((map, val) => {
-    map[val] = (map[val] || 0) + 1;
-    return map;
-  }, {});
+
+  // wordStatus.value = answer.value.reduce((map, val) => {
+  //   map[val] = (map[val] || 0) + 1;
+  //   return map;
+  // }, {});
   
 }
 
@@ -4701,39 +4706,24 @@ const allAnswers = [
 function deleteLetter() {
   if (order.value > 0 && !gameStatus.value) {
     order.value--;
-    word.value.splice(order.value, 1, {
-      txt: "",
-      includes: false,
-      home: false,
-      notInclude: false,
-    });
+    word.value.splice(order.value, 1, '');
   }
 }
 
 function addLetter(letter) {
   if (order.value < 5 && !gameStatus.value) {
-    word.value.splice(order.value++, 1, {
-      txt: letter,
-      includes: false,
-      home: false,
-      notInclude: false,
-    });
+    word.value.splice(order.value++, 1,letter);
   }
 }
 function addLetterKeyboard(key) {
   if (order.value < 5 && !gameStatus.value) {
-    word.value.splice(order.value++, 1, {
-      txt: key,
-      includes: false,
-      home: false,
-      notInclude: false,
-    });
+    word.value.splice(order.value++, 1, key);
   }
 }
 
 function toastWordCheck() {
   let isAnswer = word.value
-    .reduce((res, current) => res + current.txt, "")
+    .reduce((res, current) => res + current, "")
     .toLocaleLowerCase("tr");
   let isAnswerResult = allAnswers.includes(isAnswer);
 
@@ -4755,18 +4745,15 @@ function enterWord() {
 
     if (isAnswerRes) {
       order.value = 0;
-      words.value.splice(tryCounter.value++, 1, word.value);
+      //words.value.splice(tryCounter.value++, 1, word.value);
+      words.value[tryCounter.value++] =  word.value.join("")
      
 
       checkWord();
-      word.value = Array(5).fill({
-        txt: '',
-        includes: false,
-        home: false,
-        notInclude: false,
-      });
-      console.log("word val",word.value);
-        
+      console.log("previous value",word.value);
+      word.value = Array(5).fill('');
+      console.log("words",words.value);
+      console.log("evaluations",evaluations.value);
     }
   }
 }
@@ -4781,7 +4768,8 @@ watch(winOrLose, async (newVal, oldVal) => {
   }
 });
 
-/*
+ //checkWord content is here
+/* 
 words.value[tryCounter.value - 1].forEach((element, index) => {
     if (element.txt === answer.value[index]) {
       element.home = true;
@@ -4811,11 +4799,7 @@ words.value[tryCounter.value - 1].forEach((element, index) => {
   });
   console.log("wordStatus",wordStatus.value);
 */
-// checkWord content is here
 
-watch(word.value,async(newVal,oldVal)=>{
-  console.log(newVal);
-})
 
 function checkWord() {
   if (tryCounter.value === 6) {
@@ -4825,7 +4809,19 @@ function checkWord() {
   if(gameStatus.value === false){
     startGame()
   }
-  console.log("words",words.value);
+  const rigthAnswer = word.value.join("") === answer.value;
+
+  if(rigthAnswer){
+    console.log("Doğru cevap tebrikler");
+  }
+  const correct = word.value.filter((el,index) =>{
+      console.log("burası", el + " " + answer.value.charAt(index) ,el === answer.value.charAt(index));
+      return el === answer.value.charAt(index)
+
+  })
+  console.log("correct",correct);
+  
+
 
   
   
@@ -4866,22 +4862,17 @@ function styleLetter(letter) {
           v-if="tryCounter === index"
           v-for="a in word"
           class="boardItem"
-          :class="{ pulse: a.txt }"
+          :class="{ pulse: a }"
         >
-          {{ a.txt }}
+          {{ a }}
         </div>
         <div
           v-else-if="item"
           v-for="(a, index) in item"
           class="boardItem"
-          :class="{
-            'bg-green-600 wordCheckAnimation': a.home,
-            'bg-yellow-700 wordCheckAnimation': a.includes,
-            'bg-gray-500 wordCheckAnimation': a.notInclude,
-            wordCheckAnimation: a.txt,
-          }"
+          
         >
-          {{ a.txt }}
+          {{ a }}
         </div>
       </div>
     </div>

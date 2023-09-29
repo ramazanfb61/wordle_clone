@@ -73,12 +73,14 @@ function saveToStorage() {
 
 function setGameSettings() {
   let randomAnswer = Array.from(
-    allAnswers[Math.floor(Math.random() * allAnswers.length)].toLocaleUpperCase(
+    //allAnswers[Math.floor(Math.random() * allAnswers.length)]
+
+    "içmek".toLocaleUpperCase(
       "TR"
     )
   );
   answer.value = randomAnswer;
-  //console.log("cevap",answer.value.join(''));
+  console.log("cevap",answer.value.join(''),answer.value);
   
   gameAnswer.editAnswer(answer.value.join(""));
   
@@ -4760,10 +4762,15 @@ function enterWord() {
 
     if (isAnswerRes) {
       order.value = 0;
-      words.value.splice(tryCounter.value++, 1, word.value);
-     
 
-      checkWord();
+
+      const checkedWord = checkWord();
+      console.log(word.value);
+      
+      words.value.splice(tryCounter.value++, 1, word.value);
+      
+
+      
       word.value = Array(5).fill(<wordItem>{
         txt: "",
         includes: false,
@@ -4784,15 +4791,7 @@ watch(winOrLose, async (newVal, oldVal) => {
   }
 });
 
-function checkWord() {
-  if (tryCounter.value === 6) {
-    winOrLose.value = false;
-    gameStatus.value = true;
-  }
-  if(gameStatus.value === false){
-    startGame()
-  }
-  words.value[tryCounter.value - 1].forEach((element, index) => {
+/* words.value[tryCounter.value - 1].forEach((element, index) => {
     if (element.txt === answer.value[index]) {
       element.home = true;
       foundLetter.value.push(element.txt);
@@ -4818,9 +4817,64 @@ function checkWord() {
       });
       
     }
-  });
+  }); */
 
+function getWordItem(item:string){
+  const wordValue = [];
+
+  word.value.forEach((el,index)=>{
+    wordValue.push(el[item])
+  })
+  return wordValue
+}
+
+
+
+function checkWord() {
+  if (tryCounter.value === 6) {
+    winOrLose.value = false;
+    gameStatus.value = true;
+  }
+  if(gameStatus.value === false){
+    startGame()
+  }
+
+  const txtWord = getWordItem("txt"); // user answer
+  const includesWord = getWordItem("includes");
+  const homeWord = getWordItem("home");
+
+  console.log("burası",txtWord);
   
+  let theAnswer:string[] = answer.value // real answer
+
+  if(theAnswer === txtWord){
+    console.log("doğru cevap");
+  }else{
+    const correct = txtWord.filter((el,index)=>{
+      return el === theAnswer[index]
+    })
+    console.log(theAnswer);
+    
+    const noneCorrect = txtWord.filter((el,index)=>{
+      return  el !== theAnswer[index] 
+    })
+
+    const present = theAnswer.filter((el,index)=>{
+     return correct.forEach((e,i)=>{
+      return e === el
+     })
+    })
+    
+    
+
+    console.log("correct",correct);
+    console.log("present",present);
+
+    console.log("noneCorrect",noneCorrect);
+    
+  }
+
+  return []
 }
 
 addEventListener("keydown", (event) => {

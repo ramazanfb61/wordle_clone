@@ -4845,7 +4845,7 @@ function checkWord() {
 
   console.log("burası",txtWord);
   
-  let theAnswer:string[] = answer.value // real answer
+  let theAnswer = answer.value // real answer
 
   if(theAnswer === txtWord){
     console.log("doğru cevap");
@@ -4853,23 +4853,39 @@ function checkWord() {
     const correct = txtWord.filter((el,index)=>{
       return el === theAnswer[index]
     })
-    console.log(theAnswer);
+    console.log("theAnswer",theAnswer);
     
     const noneCorrect = txtWord.filter((el,index)=>{
       return  el !== theAnswer[index] 
     })
 
-    const present = theAnswer.filter((el,index)=>{
-     return correct.forEach((e,i)=>{
-      return e === el
-     })
+    correct.forEach((el,index)=>{
+      var a = theAnswer.indexOf(el)
+      console.log(a);
+      
+      theAnswer.splice(a,1)
     })
-    
-    
 
+    noneCorrect.forEach(el=>{
+      
+    })
+
+
+    
+    var includes = []
+    const present = noneCorrect.forEach((el)=>{
+      if(theAnswer.includes(el)){
+        includes.push(el)
+      }
+      
+      
+      return includes
+    })
+
+    //console.log("yeni theAnswer",theAnswer);
+    console.log("present ones",includes);
     console.log("correct",correct);
     console.log("present",present);
-
     console.log("noneCorrect",noneCorrect);
     
   }

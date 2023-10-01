@@ -15,6 +15,7 @@ const foundLetter = ref([]);
 const includeLetter = ref([]);
 const toastWord = ref(false);
 const notIncludeLetter = ref([]);
+const evaluations = ref([])
 
 const keyboard = [
   "E",
@@ -4865,22 +4866,25 @@ function checkWord() {
       
       theAnswer.splice(a,1)
     })
-
-    noneCorrect.forEach(el=>{
-      
-    })
-
-
     
     var includes = []
-    const present = noneCorrect.forEach((el)=>{
+    const present = noneCorrect.forEach((el,i)=>{
       if(theAnswer.includes(el)){
         includes.push(el)
+        console.log("index",i);
+        
       }
       
       
       return includes
     })
+
+    includes.forEach((el,i)=>{
+      var a = noneCorrect.indexOf(el)
+      console.log("nonecorrect index:",a);
+      noneCorrect.splice(a,1)
+    })
+    
 
     //console.log("yeni theAnswer",theAnswer);
     console.log("present ones",includes);

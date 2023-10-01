@@ -15,7 +15,7 @@ const foundLetter = ref([]);
 const includeLetter = ref([]);
 const toastWord = ref(false);
 const notIncludeLetter = ref([]);
-const evaluations = ref(Array(6).fill(Array(5).fill("")))
+const evaluations = ref(Array(6).fill([]))
 
 const keyboard = [
   "E",
@@ -75,10 +75,9 @@ function saveToStorage() {
 function setGameSettings() {
   let randomAnswer = Array.from(
     //allAnswers[Math.floor(Math.random() * allAnswers.length)]
-
-    "içmek".toLocaleUpperCase(
-      "TR"
-    )
+      "teres".toLocaleUpperCase(
+        "TR"
+      )
   );
   answer.value = randomAnswer;
   console.log("cevap",answer.value.join(''),answer.value);
@@ -4704,7 +4703,7 @@ type wordItem = {
   includes: false;
   home: false;
   notInclude: false;
-};
+}; 
 
 function deleteLetter(): void {
   if (order.value > 0 && !gameStatus.value) {
@@ -4765,7 +4764,7 @@ function enterWord() {
       order.value = 0;
 
 
-      const checkedWord = checkWord();
+      checkWord();
       console.log(word.value);
       
       words.value.splice(tryCounter.value++, 1, word.value);
@@ -4829,7 +4828,9 @@ function getWordItem(item:string){
   return wordValue
 }
 
-
+function wordStyle(arg){
+  return evaluations.value.at(arg)
+}
 
 function checkWord() {
   if (tryCounter.value === 6) {
@@ -4850,57 +4851,86 @@ function checkWord() {
 
   if(theAnswer === txtWord){
     console.log("doğru cevap");
-  }else{
+  }
+
+    const payload = Array(5).fill("");
+
+    const correctOnes = [];
+
     const correct = txtWord.filter((el,index)=>{
       if( el === theAnswer[index]){
-        console.log(index);
         
+        correctOnes.push(index)
         return index
       }      
     })
-    console.log("burası",correct);
+    console.log("burasısdf",correct , correctOnes);
+
+    // write correct ones
+
+    correctOnes.forEach((el,i)=>{
+      payload.splice(el,1,"correct")
+    })
+
+
+
+
     
     const noneCorrect = txtWord.filter((el,index)=>{
       return  el !== theAnswer[index] 
     })
 
+    // remove correct letters from real answer for disposal //
     correct.forEach((el,index)=>{
-      var a = theAnswer.indexOf(el)
-      console.log(a);
-      
+      var a = theAnswer.indexOf(el)      
       theAnswer.splice(a,1)
     })
+    console.log("şu nedir",theAnswer);
+    
     
     var includes = []
-    const present = noneCorrect.forEach((el,i)=>{
-      if(theAnswer.includes(el)){
-        includes.push(el)
-        console.log("index",i);
-        
+    const present = theAnswer.filter((el,i)=>{
+
+
+      if(txtWord.includes(el)){
+        includes.push(txtWord.indexOf(el))
+        return includes
       }
+
+      console.log("==>",includes);
       
-      
-      return includes
     })
 
     includes.forEach((el,i)=>{
+      console.log(el);
+      
+      payload.splice(el,1,"includes")
+    })
+
+    payload.forEach((el,i)=>{
+      if(el.length === 0){
+        payload.splice(i,1,"absent")
+      }
+    })
+
+    present.forEach((el,i)=>{
       var a = noneCorrect.indexOf(el)
-      console.log("nonecorrect index:",a);
       noneCorrect.splice(a,1)
     })
-    
 
-    //console.log("yeni theAnswer",theAnswer);
+    
+    
+    console.log("yeni theAnswer",theAnswer);
+    
+    console.log("includes:",includes);
+    console.log("correct:",correct);
+    console.log("present:",present);
+    console.log("noneCorrect:",noneCorrect);
+    console.log("payload",payload);
+    
+    evaluations.value.splice(tryCounter.value,1,payload)
     console.log("evaluations",evaluations.value);
-    
-    console.log("present ones",includes);
-    console.log("correct",correct);
-    console.log("present",present);
-    console.log("noneCorrect",noneCorrect);
-    
-  }
-
-  return []
+    wordStyle()
 }
 
 addEventListener("keydown", (event) => {
@@ -4922,6 +4952,8 @@ function styleLetter(letter) {
     return "bg-gray-500";
   }
 }
+
+
 </script>
 
 <template>
@@ -4944,16 +4976,17 @@ function styleLetter(letter) {
         </div>
         <div
           v-else-if="item"
-          v-for="(a, index) in item"
+          v-for="(a,i) in item"
+          
           class="boardItem"
           :class="{
-            'bg-green-600 wordCheckAnimation': a.home,
-            'bg-yellow-700 wordCheckAnimation': a.includes,
-            'bg-gray-500 wordCheckAnimation': a.notInclude,
+            'bg-green-600 wordCheckAnimation': evaluations[index][i]==='correct',
+            'bg-yellow-700 wordCheckAnimation': evaluations[index][i]==='includes',
+            'bg-gray-500 wordCheckAnimation': evaluations[index][i]==='absent',
             wordCheckAnimation: a.txt,
           }"
         >
-          {{ a.txt }}
+          {{ a.txt,evaluations[index][i] }}
         </div>
       </div>
     </div>

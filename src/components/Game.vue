@@ -15,7 +15,7 @@ const foundLetter = ref([]);
 const includeLetter = ref([]);
 const toastWord = ref(false);
 const notIncludeLetter = ref([]);
-const evaluations = ref([])
+const evaluations = ref(Array(6).fill(Array(5).fill("")))
 
 const keyboard = [
   "E",
@@ -4852,9 +4852,13 @@ function checkWord() {
     console.log("doğru cevap");
   }else{
     const correct = txtWord.filter((el,index)=>{
-      return el === theAnswer[index]
+      if( el === theAnswer[index]){
+        console.log(index);
+        
+        return index
+      }      
     })
-    console.log("theAnswer",theAnswer);
+    console.log("burası",correct);
     
     const noneCorrect = txtWord.filter((el,index)=>{
       return  el !== theAnswer[index] 
@@ -4887,6 +4891,8 @@ function checkWord() {
     
 
     //console.log("yeni theAnswer",theAnswer);
+    console.log("evaluations",evaluations.value);
+    
     console.log("present ones",includes);
     console.log("correct",correct);
     console.log("present",present);

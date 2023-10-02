@@ -4856,81 +4856,89 @@ function checkWord() {
     const payload = Array(5).fill("");
 
     const correctOnes = [];
-
-    const correct = txtWord.filter((el,index)=>{
-      if( el === theAnswer[index]){
+    console.log(theAnswer);
+    
+    const correct = theAnswer.forEach((el,index)=>{
+      if( el === txtWord[index]){
+        console.log(el,txtWord[index]);
         
         correctOnes.push(index)
         return index
       }      
-    })
-    console.log("burasısdf",correct , correctOnes);
+    });
+    console.log("correct ones", correctOnes);
+    console.log("correct:",correct);
 
     // write correct ones
 
     correctOnes.forEach((el,i)=>{
       payload.splice(el,1,"correct")
-    })
-
+    });
+    console.log(payload);
+    
 
 
 
     
-    const noneCorrect = txtWord.filter((el,index)=>{
-      return  el !== theAnswer[index] 
-    })
+    // const noneCorrect = txtWord.filter((el,index)=>{
+    //   return  el !== theAnswer[index] 
+    // });
+    // console.log("noneCorrect:",noneCorrect);
+
 
     // remove correct letters from real answer for disposal //
-    correct.forEach((el,index)=>{
-      var a = theAnswer.indexOf(el)      
-      theAnswer.splice(a,1)
-    })
-    console.log("şu nedir",theAnswer);
+   // correct.forEach((el,index)=>{
+   //   var a = theAnswer.indexOf(el)      
+   //   theAnswer.splice(a,1)
+   // });
+
+
+
+    console.log("şu nedir answer:",theAnswer);
     
     
-    var includes = []
-    const present = theAnswer.filter((el,i)=>{
+    var includes = [];
+    const present = theAnswer.forEach((el,i)=>{
 
 
       if(txtWord.includes(el)){
-        includes.push(txtWord.indexOf(el))
-        return includes
+        includes.push(txtWord.indexOf(el));
       }
 
       console.log("==>",includes);
-      
-    })
+      return includes
+    });
+    
+    console.log("present:",present);
+    console.log("includes:",includes);
+
 
     includes.forEach((el,i)=>{
       console.log(el);
       
       payload.splice(el,1,"includes")
-    })
+    });
 
     payload.forEach((el,i)=>{
       if(el.length === 0){
         payload.splice(i,1,"absent")
       }
-    })
+    });
 
-    present.forEach((el,i)=>{
-      var a = noneCorrect.indexOf(el)
-      noneCorrect.splice(a,1)
-    })
+   // present.forEach((el,i)=>{
+   //   var a = noneCorrect.indexOf(el);
+   //   noneCorrect.splice(a,1);
+   // });
 
     
     
     console.log("yeni theAnswer",theAnswer);
     
-    console.log("includes:",includes);
-    console.log("correct:",correct);
-    console.log("present:",present);
-    console.log("noneCorrect:",noneCorrect);
     console.log("payload",payload);
     
-    evaluations.value.splice(tryCounter.value,1,payload)
+    evaluations.value.splice(tryCounter.value,1,payload);
     console.log("evaluations",evaluations.value);
-    wordStyle()
+    wordStyle();
 }
 
 addEventListener("keydown", (event) => {

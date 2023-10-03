@@ -7,10 +7,10 @@ const word = ref(Array(5).fill(<wordItem>{}));
 const words = ref(Array(6).fill(Array(5).fill(<wordItem>{})));
 const tryCounter = ref(0);
 const order = ref(0);
-const answer = ref<any>([]); // ,"Y","A","K"
+const answer = ref<any>([]); 
 const wordStatus = ref();
-const gameStatus = ref(false);
-const winOrLose = ref<any>(null);
+const gameStatus = ref(false); // false means active , true means done
+const winOrLose = ref<any>(null); // true = win , false = lose
 const foundLetter = ref([]);
 const includeLetter = ref([]);
 const toastWord = ref(false);
@@ -75,12 +75,12 @@ function saveToStorage() {
 function setGameSettings() {
   let randomAnswer = Array.from(
     //allAnswers[Math.floor(Math.random() * allAnswers.length)]
-      "teres".toLocaleUpperCase(
+      "kevel".toLocaleUpperCase(
         "TR"
       )
   );
   answer.value = randomAnswer;
-  console.log("cevap",answer.value.join(''),answer.value);
+  //console.log("cevap",answer.value.join(''),answer.value);
   
   gameAnswer.editAnswer(answer.value.join(""));
   
@@ -4765,7 +4765,7 @@ function enterWord() {
 
 
       checkWord();
-      console.log(word.value);
+      //console.log(word.value);
       
       words.value.splice(tryCounter.value++, 1, word.value);
       
@@ -4819,6 +4819,15 @@ watch(winOrLose, async (newVal, oldVal) => {
     }
   }); */
 
+
+  watch(tryCounter,async(newVal,oldVal)=>{
+    if(newVal === 6 && winOrLose.value === false){
+      gameStatus.value = true
+      winOrLose.value = false
+    }
+    
+  })
+
 function getWordItem(item:string){
   const wordValue = [];
 
@@ -4833,49 +4842,58 @@ function wordStyle(arg){
 }
 
 function checkWord() {
-  if (tryCounter.value === 6) {
+  //console.log("try counter",tryCounter.value);
+  
+  if (tryCounter.value === 5) {
     winOrLose.value = false;
     gameStatus.value = true;
   }
   if(gameStatus.value === false){
     startGame()
   }
-
+  
   const txtWord = getWordItem("txt"); // user answer
   const includesWord = getWordItem("includes");
   const homeWord = getWordItem("home");
 
-  console.log("burası",txtWord);
+  //console.log("burası",txtWord);
   
-  let theAnswer = answer.value // real answer
+  var theAnswer = [] // real answer
+  answer.value.forEach(el=>{
+    theAnswer.push(el)
+  })
+  //console.log("burası answer",answer.value);
+  
 
-  if(theAnswer === txtWord){
-    console.log("doğru cevap");
+  if(theAnswer.join("") === txtWord.join("")){
+    gameStatus.value = true;
+    winOrLose.value = true
   }
-
+  
     const payload = Array(5).fill("");
 
-    const correctOnes = [];
-    console.log(theAnswer);
+    var correctOnes = [];
+    //console.log(theAnswer);
     
     const correct = theAnswer.forEach((el,index)=>{
       if( el === txtWord[index]){
-        console.log(el,txtWord[index]);
-        
+        //console.log(el,txtWord[index]);
+        theAnswer.splice(index,1,"")
         correctOnes.push(index)
+        foundLetter.value.push(el)
         return index
       }      
     });
-    console.log("correct ones", correctOnes);
-    console.log("correct:",correct);
+    //console.log("correct ones", correctOnes);
+    //console.log("correct:",correct);
 
     // write correct ones
 
     correctOnes.forEach((el,i)=>{
       payload.splice(el,1,"correct")
     });
-    console.log(payload);
-    
+    //console.log(payload);
+    correctOnes = []
 
 
 
@@ -4883,7 +4901,7 @@ function checkWord() {
     // const noneCorrect = txtWord.filter((el,index)=>{
     //   return  el !== theAnswer[index] 
     // });
-    // console.log("noneCorrect:",noneCorrect);
+    // //console.log("noneCorrect:",noneCorrect);
 
 
     // remove correct letters from real answer for disposal //
@@ -4894,30 +4912,37 @@ function checkWord() {
 
 
 
-    console.log("şu nedir answer:",theAnswer);
+    //console.log("şu nedir answer:",theAnswer);
+    //console.log("txtword",txtWord);
     
     
     var includes = [];
-    const present = theAnswer.forEach((el,i)=>{
+    const present = txtWord.forEach((el,i)=>{
 
-
-      if(txtWord.includes(el)){
-        includes.push(txtWord.indexOf(el));
+      if(theAnswer.includes(el)){
+        includes.push(i)
+        includeLetter.value.push(el)
       }
+      
+     
 
-      console.log("==>",includes);
+      //console.log("==>",el,theAnswer[i]);
       return includes
     });
     
-    console.log("present:",present);
-    console.log("includes:",includes);
+    //console.log("present:",present);
+    //console.log("includes:",includes);  
 
 
     includes.forEach((el,i)=>{
-      console.log(el);
-      
-      payload.splice(el,1,"includes")
+      //console.log(el);
+      if(payload[el] !== "correct"){
+        payload.splice(el,1,"includes")
+      }
     });
+
+    includes = []
+
 
     payload.forEach((el,i)=>{
       if(el.length === 0){
@@ -4928,17 +4953,23 @@ function checkWord() {
    // present.forEach((el,i)=>{
    //   var a = noneCorrect.indexOf(el);
    //   noneCorrect.splice(a,1);
+    //console.log("answer.value ",answer.value);
    // });
-
+     //console.log("old theAnswer",theAnswer);
+    //console.log("answer.value ",answer.value);
     
+    theAnswer = answer.value
+        
     
-    console.log("yeni theAnswer",theAnswer);
+    //console.log("yeni theAnswer",theAnswer);
     
-    console.log("payload",payload);
+    //console.log("payload",payload);
     
     evaluations.value.splice(tryCounter.value,1,payload);
-    console.log("evaluations",evaluations.value);
+    //console.log("evaluations",evaluations.value);
     wordStyle();
+    
+
 }
 
 addEventListener("keydown", (event) => {

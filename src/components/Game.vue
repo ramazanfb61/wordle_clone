@@ -74,8 +74,8 @@ function saveToStorage() {
 
 function setGameSettings() {
   let randomAnswer = Array.from(
-    //allAnswers[Math.floor(Math.random() * allAnswers.length)]
-      "kevel".toLocaleUpperCase(
+    allAnswers[Math.floor(Math.random() * allAnswers.length)]
+      .toLocaleUpperCase(
         "TR"
       )
   );

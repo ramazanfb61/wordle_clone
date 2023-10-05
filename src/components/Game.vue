@@ -74,7 +74,7 @@ function saveToStorage() {
 
 function setGameSettings() {
   let randomAnswer = Array.from(
-    allAnswers[Math.floor(Math.random() * allAnswers.length)]
+   allAnswers[Math.floor(Math.random() * allAnswers.length)]
       .toLocaleUpperCase(
         "TR"
       )
@@ -4920,6 +4920,10 @@ function checkWord() {
     const present = txtWord.forEach((el,i)=>{
 
       if(theAnswer.includes(el)){
+        // remove include letter for no mistakes
+        var a = theAnswer.indexOf(el);
+        theAnswer.splice(a,1,1)
+
         includes.push(i)
         includeLetter.value.push(el)
       }
@@ -4947,6 +4951,7 @@ function checkWord() {
     payload.forEach((el,i)=>{
       if(el.length === 0){
         payload.splice(i,1,"absent")
+        notIncludeLetter.value.push(txtWord[i])
       }
     });
 
